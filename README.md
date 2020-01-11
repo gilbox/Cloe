@@ -113,6 +113,44 @@ struct MyView: View {
 }
 ```
 
+## Dispatching a simple action
+
+Here's how you can dispatch a simple action:
+
+```swift
+    Button("Grow up") { self.store.dispatch(AppAction.growup) }
+```
+
+Or with the optional [`Store` extension](https://github.com/gilbox/Cloe#optionally-add-some-convenience-extensions-to-the-store) mentioned above:
+    
+```swift
+
+    Button("Grow up") { self.store.dispatch(.growup) }
+
+    // ...or...
+
+    Button("Grow up", action: store[.growup])
+```
+
+## Dispatching an async action with the `PublisherMiddleware`
+
+```swift
+
+    Button("Grow up") { self.store.dispatch(self.delayedGrowup()) }
+    
+  //...
+
+  private func delayedGrowup() -> PublisherAction<AppState> {
+    PublisherAction { dispatch, getState in
+      Just(())
+        .delay(for: 2, scheduler: RunLoop.main)
+        .sink { _ in
+          dispatch(AppAction.growup)
+        }
+    }
+  }
+```
+
 ## How is it different from ReSwift?
 
 - ReSwift is battle tested.
