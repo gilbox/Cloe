@@ -101,14 +101,14 @@ struct MyView: View {
     Connect(store: store, selector: selector, content: body)
   }
 
-  // Setup a state selector
-  private func selector(_ state: AppState) -> MyDerivedState {
-    .init(age: state.age, name: state.names[index])
-  }
-
   // Render something using the selected state
   private func body(_ state: MyDerivedState) -> some View {
     Text("Hello \(state.name)!")
+  }
+  
+  // Setup a state selector
+  private func selector(_ state: AppState) -> MyDerivedState {
+    .init(age: state.age, name: state.names[index])
   }
 }
 ```
