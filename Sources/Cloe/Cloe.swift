@@ -70,6 +70,10 @@ public class Store<R: Reducer>: ObservableObject {
     dispatchFunction(action)
   }
 
+  public subscript(_ action: Action) -> (() -> Void) {
+    { [weak self] in self?.dispatch(action) }
+  }
+
   /// Returns a publisher for the given derived state selector
   /// - Parameter selector: A function that returns a derived state
   ///     given the store's current state as input.

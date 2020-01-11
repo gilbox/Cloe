@@ -60,11 +60,11 @@ let contentView = ContentView().environmentObject(store)
 ## (Optionally) add some convenience extensions to the store
 
 These extensions improve the ergonomics of working with the store. With the built-in
-`dispatch` function we would dispatch like `store.dispatch(AppAction.growup)`.
+`dispatch` function we would normall dispatch like `store.dispatch(AppAction.growup)`.
 With this `dispatch` extension we can do `store.dispatch(.growup)` instead.
 
 The `subscript` extension allows us to avoid using a closure with SwiftUI views.
-For example, a button can be implemented with: `Button("Grow up", action: store[.growup])`
+For example, a button can be implemented with: `Button("Grow up", action: store[.growup])`.
 
 ```swift
 extension Store {
@@ -119,6 +119,10 @@ Here's how you can dispatch a simple action:
 
 ```swift
     Button("Grow up") { self.store.dispatch(AppAction.growup) }
+    
+    // ... or ...
+    
+    Button("Grow up", action: store[AppAction.growup])
 ```
 
 Or with the optional [`Store` extension](https://github.com/gilbox/Cloe#optionally-add-some-convenience-extensions-to-the-store) mentioned above:
