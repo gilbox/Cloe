@@ -113,6 +113,17 @@ struct MyView: View {
 }
 ```
 
+## How is it different from ReSwift?
+
+- ReSwift is battle tested.
+- ReSwift is being used in real production apps.
+- Cloe uses [Combine Publishers](https://github.com/gilbox/Cloe/blob/master/Sources/Cloe/Cloe.swift) instead of a [bespoke StoreSubscriber](https://github.com/ReSwift/ReSwift/blob/master/ReSwift/CoreTypes/StoreSubscriber.swift) 
+- Cloe's [Middleware](https://github.com/gilbox/Cloe/blob/master/Sources/Cloe/Cloe.swift) is simpler than [ReSwift's Middleware](https://github.com/ReSwift/ReSwift/blob/master/ReSwift/CoreTypes/Middleware.swift) but achieves the same level of flexibility.
+- Cloe's [combineMiddleware](https://github.com/gilbox/Cloe/blob/master/Sources/Cloe/Cloe.swift) function is simpler and easier-to-read.
+- Cloe provides a slick way to connect your SwiftUI views.
+- Cloe requires `State` to conform to `Equatable` (subject to change).
+- Cloe does not have a skip-repeats option for the main Store state, but it when you [`Connect`](https://github.com/gilbox/Cloe/blob/master/Sources/Cloe/Connect.swift) it to a SwiftUI component it does skip repeats (subject to change).
+
 ## Example
 
 To run the example project, clone this repo, and open iOS Example.xcworkspace from the iOS Example directory.
