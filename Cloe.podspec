@@ -1,3 +1,15 @@
+
+# Update instructions:
+# 1) push tag
+#    git tag x.y.z
+#    git push origin --tags
+#
+# 2) lint
+#    pod spec lint Cloe.podspec
+#
+# 3) publish new version
+#    pod trunk push
+
 Pod::Spec.new do |spec|
 
   spec.name         = "Cloe"
