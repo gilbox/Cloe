@@ -60,7 +60,7 @@ let contentView = ContentView().environmentObject(store)
 ## (Optionally) add some convenience extensions to the store
 
 These extensions improve the ergonomics of working with the store. With the built-in
-`dispatch` function we would normall dispatch like `store.dispatch(AppAction.growup)`.
+`dispatch` function we would normally dispatch with `store.dispatch(AppAction.growup)`.
 With this `dispatch` extension we can do `store.dispatch(.growup)` instead.
 
 The `subscript` extension allows us to avoid using a closure with SwiftUI views.
@@ -165,6 +165,20 @@ Or with the optional [`Store` extension](https://github.com/gilbox/Cloe#optional
 - Cloe provides a slick way to connect your SwiftUI views.
 - Cloe requires `State` to conform to `Equatable` (subject to change).
 - Cloe does not have a skip-repeats option for the main Store state, but it when you [`Connect`](https://github.com/gilbox/Cloe/blob/master/Sources/Cloe/Connect.swift) it to a SwiftUI component it does skip repeats (subject to change).
+
+## Why does the `Store` object conform to `ObservableObject`?
+
+You may have noticed that Cloe's [`Store`](https://github.com/gilbox/Cloe/blob/master/Sources/Cloe/Cloe.swift) class conforms to [`ObservableObject`](https://developer.apple.com/documentation/combine/observableobject).
+However, the `Store` **does not contain any `@Published` properties**. This conformance 
+is only added to make it easy to inject your store with [`.environmentObject()`](https://developer.apple.com/documentation/swiftui/environmentobject).
+However, since we don't expose any `@Published` vars don't expect a view with
+
+```swift
+@ObservedObject var store: AppStore
+```
+
+to automatically re-render when the store changes. This design is intentional so you can 
+subscribe to more granular updates with [`Connect`](https://github.com/gilbox/Cloe/blob/master/Sources/Cloe/Connect.swift).
 
 ## Example
 
