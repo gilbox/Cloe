@@ -178,7 +178,7 @@ However, since we don't expose any `@Published` vars don't expect a view with
 ```
 
 to automatically re-render when the store changes. This design is intentional so you can 
-subscribe to more granular updates with [`Connect`](https://github.com/gilbox/Cloe/blob/master/Sources/Cloe/Connect.swift).
+[subscribe](https://github.com/gilbox/Cloe#connect-your-swiftui-view-to-your-store) to more granular updates with [`Connect`](https://github.com/gilbox/Cloe/blob/master/Sources/Cloe/Connect.swift).
 
 ## Example
 
