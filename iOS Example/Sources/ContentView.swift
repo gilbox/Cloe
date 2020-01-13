@@ -41,6 +41,15 @@ struct MyChild: View {
 
   @EnvironmentObject private var store: AppStore
 
+  private let delayedGrowup = PublisherAction<AppState> { dispatch, getState, cancellables in
+    Just(())
+      .delay(for: 2, scheduler: RunLoop.main)
+      .sink { _ in
+        dispatch(AppAction.growup)
+      }
+      .store(in: &cancellables)
+  }
+
   private struct MyChildState: Equatable {
     var age: Int
     var name: String
@@ -51,23 +60,12 @@ struct MyChild: View {
       Text("I'm \(state.age).")
       Text("My name is \(state.name)")
       Button("Grow up", action: store[.growup])
-      Button("Grow up delayed 2s") { self.store.dispatch(self.delayedGrowup()) }
+      Button("Grow up delayed 2s") { self.store.dispatch(self.delayedGrowup) }
     }
   }
 
   private func selector(_ state: AppState) -> MyChildState {
     .init(age: state.age, name: state.names[index])
-  }
-
-  private func delayedGrowup() -> PublisherAction<AppState> {
-    PublisherAction { dispatch, getState, cancellables in
-      Just(())
-        .delay(for: 2, scheduler: RunLoop.main)
-        .sink { _ in
-          dispatch(AppAction.growup)
-        }
-        .store(in: &cancellables)
-    }
   }
 }
 

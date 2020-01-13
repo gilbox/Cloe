@@ -140,19 +140,17 @@ Or with the optional [`Store` extension](https://github.com/gilbox/Cloe#optional
 
 ```swift
 
-    Button("Grow up") { self.store.dispatch(self.delayedGrowup()) }
+    Button("Grow up") { self.store.dispatch(self.delayedGrowup) }
     
   //...
 
-  private func delayedGrowup() -> PublisherAction<AppState> {
-    PublisherAction { dispatch, getState, cancellables in
-      Just(())
-        .delay(for: 2, scheduler: RunLoop.main)
-        .sink { _ in
-          dispatch(AppAction.growup)
-        }
-        .store(in: &cancellables)
-    }
+  private let delayedGrowup = PublisherAction<AppState> { dispatch, getState, cancellables in
+    Just(())
+      .delay(for: 2, scheduler: RunLoop.main)
+      .sink { _ in
+        dispatch(AppAction.growup)
+      }
+      .store(in: &cancellables)
   }
 ```
 
