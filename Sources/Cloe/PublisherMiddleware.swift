@@ -27,7 +27,6 @@ public class PublisherAction<State>: Action {
 
   // MARK: Internal
 
-  let body: Body?
 
   func execute(dispatch: @escaping Dispatch, getState: @escaping () -> State?) {
     body?(dispatch, getState, &cancellables)
@@ -35,6 +34,7 @@ public class PublisherAction<State>: Action {
 
   // MARK: Private
 
+  private let body: Body?
   private var cancellables = Set<AnyCancellable>()
 }
 
