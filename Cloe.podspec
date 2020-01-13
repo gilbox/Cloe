@@ -14,7 +14,7 @@ Pod::Spec.new do |spec|
 
   spec.name         = "Cloe"
   spec.version      = "0.1.0"
-  spec.summary      = "Cloe is Redux for SwiftUI, built on Combine, striving for excellent feng shui."
+  spec.summary      = "Cloe is Redux on Combine for SwiftUI with excellent feng shui."
 
   spec.description  = <<-DESC
   Heavily inspired by ReSwift, but Cloe does away with the bespoke pub/sub system

@@ -4,7 +4,7 @@
 ![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/gilbox/Cloe)
 [![License](https://img.shields.io/github/license/gilbox/Cloe)](LICENSE)
 
-**Cloe is Redux for SwiftUI, built on Combine, striving for excellent feng shui**
+**Cloe is Redux on Combine for SwiftUI with excellent feng shui.**
 
 ## Setup your store
 
