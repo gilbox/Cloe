@@ -145,12 +145,13 @@ Or with the optional [`Store` extension](https://github.com/gilbox/Cloe#optional
   //...
 
   private func delayedGrowup() -> PublisherAction<AppState> {
-    PublisherAction { dispatch, getState in
+    PublisherAction { dispatch, getState, cancellables in
       Just(())
         .delay(for: 2, scheduler: RunLoop.main)
         .sink { _ in
           dispatch(AppAction.growup)
         }
+        .store(in: &cancellables)
     }
   }
 ```
@@ -204,7 +205,7 @@ If you are already using [CocoaPods](http://cocoapods.org), just add 'Cloe' to y
 If you are already using [Carthage](https://github.com/Carthage/Carthage), just add to your `Cartfile`:
 
 ```ogdl
-github "gilbox/Cloe" ~> 0.0.2
+github "gilbox/Cloe" ~> 0.1.0
 ```
 
 Then run `carthage update` to build the framework and drag the built `Cloe`.framework into your Xcode project.

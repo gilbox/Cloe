@@ -2,9 +2,10 @@
 All notable changes to this project will be documented in this file.
 Cloe adheres to [Semantic Versioning](http://semver.org/).
 
-## [Master](https://github.com/gilbox/Cloe)
-### Added
+## 0.1.0
+- Remove `Equatable` conformance requirement for store state
+- `PublisherAction` no has 3rd argument for `body` (`cancellables`), removed support for returning `AnyCancellable`.
 
-### Changed
+## 0.0.2
+- Fix podspec
 
-### Removed

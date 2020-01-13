@@ -60,12 +60,13 @@ struct MyChild: View {
   }
 
   private func delayedGrowup() -> PublisherAction<AppState> {
-    PublisherAction { dispatch, getState in
+    PublisherAction { dispatch, getState, cancellables in
       Just(())
         .delay(for: 2, scheduler: RunLoop.main)
         .sink { _ in
           dispatch(AppAction.growup)
         }
+        .store(in: &cancellables)
     }
   }
 }
