@@ -9,7 +9,7 @@
 ## Setup your store
 
 ```swift
-struct AppState: Equatable {
+struct AppState {
   var appName = "Demo App"
   var age = 6
   var names = ["hank", "cloe", "spike", "joffrey", "fido", "kahlil", "malik"]
@@ -163,8 +163,7 @@ Or with the optional [`Store` extension](https://github.com/gilbox/Cloe#optional
 - Cloe's [Middleware](https://github.com/gilbox/Cloe/blob/master/Sources/Cloe/Cloe.swift) is simpler than [ReSwift's Middleware](https://github.com/ReSwift/ReSwift/blob/master/ReSwift/CoreTypes/Middleware.swift) but achieves the same level of flexibility.
 - Cloe's [combineMiddleware](https://github.com/gilbox/Cloe/blob/master/Sources/Cloe/Cloe.swift) function is simpler and easier-to-read.
 - Cloe provides a slick way to connect your SwiftUI views.
-- Cloe requires `State` to conform to `Equatable` (subject to change).
-- Cloe does not have a skip-repeats option for the main Store state, but it when you [`Connect`](https://github.com/gilbox/Cloe/blob/master/Sources/Cloe/Connect.swift) it to a SwiftUI component it does skip repeats (subject to change).
+- Cloe does not have a skip-repeats option for the main Store state, but when you [`Connect`](https://github.com/gilbox/Cloe/blob/master/Sources/Cloe/Connect.swift) it to a SwiftUI component it always skips repeated states (subject to change).
 
 ## Why does the `Store` object conform to `ObservableObject`?
 

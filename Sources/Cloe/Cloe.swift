@@ -15,7 +15,7 @@ public typealias Dispatch = (Action) -> Void
 /// Thunk or PublisherAction or some other special middleware-provided
 /// action.
 public protocol Reducer {
-  associatedtype State: Equatable
+  associatedtype State
 
   func reduce(state: inout State, action: Action)
 }

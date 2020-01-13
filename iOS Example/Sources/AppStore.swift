@@ -2,7 +2,7 @@
 
 import Cloe
 
-struct AppState: Equatable {
+struct AppState {
   var appName = "Demo App"
   var age = 6
   var names = ["hank", "cloe", "spike", "joffrey", "fido", "kahlil", "malik"]
