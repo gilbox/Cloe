@@ -31,7 +31,7 @@ public typealias Middleware<State> = (
   -> Dispatch
 
 /// A Cloe Store
-@available(iOS 13.0, *)
+@available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
 public class Store<R: Reducer>: ObservableObject {
 
   // MARK: Public

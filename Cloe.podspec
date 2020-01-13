@@ -37,13 +37,12 @@ Pod::Spec.new do |spec|
   # TODO
   # spec.social_media_url   = "https://twitter.com/Gil Birman"
 
-  spec.platform     = :ios, :osx, :tvos
+  spec.platform     = :ios, :osx, :tvos, :watchos
 
-  #  When using multiple platforms
-  spec.ios.deployment_target = "13.1"
+  spec.ios.deployment_target = "13"
   spec.osx.deployment_target = "10.15"
-  # spec.watchos.deployment_target = "6.1" # TODO
-  spec.tvos.deployment_target = "13.2"
+  spec.watchos.deployment_target = "6"
+  spec.tvos.deployment_target = "13"
 
   spec.source       = { :git => "https://github.com/gilbox/Cloe.git", :tag => "#{spec.version}" }
 

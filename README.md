@@ -185,10 +185,10 @@ To run the example project, clone this repo, and open iOS Example.xcworkspace fr
 
 ## Requirements
 
-- iOS 13.1
+- iOS 13
 - macOS 10.15
-- watchOS 6.1
-- tvOS 13.2
+- watchOS 6
+- tvOS 13
 
 ## Installation
 

@@ -4,7 +4,7 @@ import Combine
 
 /// Similar to a thunk, except that it will hold on to a Set of
 /// AnyCancellable instances while your Combine pipelines process an async task.
-@available(iOS 13.0, *)
+@available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
 public class PublisherAction<State>: Action {
 
   // MARK: Public
@@ -38,7 +38,7 @@ public class PublisherAction<State>: Action {
   private var cancellables = Set<AnyCancellable>()
 }
 
-@available(iOS 13.0, *)
+@available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
 public func createPublisherMiddleware<State>() -> Middleware<State> {
   { (fullDispatch, getState, nextDispatch) in
     { action in
