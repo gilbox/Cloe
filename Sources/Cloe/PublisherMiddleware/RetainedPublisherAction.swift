@@ -1,4 +1,4 @@
-// Created by Gil Birman on 1/11/20.
+// Created by Gil Birman on 1/15/20.
 
 import Combine
 import Foundation
@@ -31,10 +31,10 @@ extension Publisher {
   }
 }
 
-/// Similar to a thunk, except that it will hold on to a Set of
+/// Similar to a thunk, except that the middleware will retain your
 /// AnyCancellable instances while your Combine pipelines process an async task.
 @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
-public final class PublisherAction<State>: Action {
+public final class RetainedPublisherAction<State>: Action {
 
   // MARK: Public
 
@@ -103,38 +103,4 @@ public final class PublisherAction<State>: Action {
   // MARK: Private
 
   private let body: Body
-}
-
-@available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
-public func createPublisherMiddleware<State>() -> Middleware<State> {
-  var cancellablesCache = [UUID:Set<AnyCancellable>]()
-
-  return { (fullDispatch, getState, nextDispatch) in
-    { action in
-      switch action {
-      case let publisherAction as PublisherAction<State>:
-        let refCount = Box(0)
-        let uuid = UUID()
-        let cleanup = {
-          refCount.value -= 1
-          if refCount.value == 0 {
-            cancellablesCache[uuid] = nil
-          }
-          // Note: Negative ref count can happen for 2 reasons:
-          // 1. cleanup() was called too many times
-          // 2. the publisher is syncronous and calls cleanup before ref count is updated below
-        }
-        let cancellables = publisherAction.execute(
-          dispatch: fullDispatch,
-          getState: getState,
-          cleanup: cleanup)
-        if cancellables.count > 0 {
-          refCount.value = cancellables.count
-          cancellablesCache[uuid] = cancellables
-        }
-      default:
-        nextDispatch(action)
-      }
-    }
-  }
 }
