@@ -33,6 +33,16 @@ extension Publisher {
 
 /// Similar to a thunk, except that the middleware will retain your
 /// AnyCancellable instances while your Combine pipelines process an async task.
+/// This is different from `PublisherAction` because `PublisherAction` requires
+/// that you retain a reference to the `PublisherAction` instance.
+/// In a `PublisherAction`, your cancellables are retained by the `PublisherAction`
+/// instance, so as soon as you de-allocate that instance, your cancellables
+/// are de-referenced and as a result your pipelines are cancelled.
+/// In `RetainedPublisherAction`, the cancellables are retained in the
+/// createPublisherMiddleware inner closure, so that the cancellables are
+/// retained until one of the following two events:
+///  - The cleanup() function is called as many times as the number of cancellables
+///  - or the store is deallocated
 @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
 public final class RetainedPublisherAction<State>: Action {
 
