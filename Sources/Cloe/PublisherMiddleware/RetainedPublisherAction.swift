@@ -3,13 +3,6 @@
 import Combine
 import Foundation
 
-private final class Box<T> {
-  public var value: T
-  public init(_ value: T) {
-    self.value = value
-  }
-}
-
 extension Publisher {
   /// Calls the provided cleanup function when the pipeline is cancelled or completes.
   /// A sink operator placed after this handleCleanup will still fire even if the cleanup function

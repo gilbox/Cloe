@@ -11,7 +11,7 @@ public func createPublisherMiddleware<State>() -> Middleware<State> {
     { action in
       switch action {
       case let publisherAction as PublisherAction<State>:
-        publisherAction.execute(dispatch: dispatch, getState: getState)
+        publisherAction.execute(dispatch: fullDispatch, getState: getState)
       case let publisherAction as RetainedPublisherAction<State>:
         let refCount = Box(0)
         let uuid = UUID()
