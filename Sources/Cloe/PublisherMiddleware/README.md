@@ -75,7 +75,7 @@ RetainedPublisherAction<MyState> { dispatch, getState, cancellables, cleanup in
   myPublisher1
     ...
     .handleCleanup(cleanup)
-    .tap { ... }   // <-- handleCleanup and store sandwhich the subscriber that returns AnyCancellable
+    .tap { ... }   // <-- handleCleanup and store sandwich the subscriber that returns AnyCancellable
     .store(in: &cancellables)
   myPublisher2
     ...
@@ -93,7 +93,7 @@ RetainedPublisherAction<MyState> { context in
   myPublisher1
     ...
     .handleCleanup(context.cleanup)
-    .tap { ... }   // <-- handleCleanup and store sandwhich the subscriber that returns AnyCancellable
+    .tap { ... }   // <-- handleCleanup and store sandwich the subscriber that returns AnyCancellable
     .store(in: &context.cancellables)
   myPublisher2
     ...
@@ -148,13 +148,13 @@ called. When that count reaches 0, all of your cancellables are released
 by the middleware.
 
 Ensuring that the middleware releases your cancellables correctly is easy, just make 
-sure to sandwhich your last subscriber in every pipeline (eg., `sink`) between
+sure to sandwich your last subscriber in every pipeline (eg., `sink`) between
 `handleError(_:)` and `receive(on:)`
 
 ```swift
 myPublisher
   ...
   .handleCleanup(cleanup)
-  .tap { ... }    // <-- Sandwhiched subscriber
+  .tap { ... }    // <-- Sandwiched subscriber
   .store(in: &cancellables)
 ```
