@@ -3,8 +3,8 @@
 import Combine
 import Foundation
 
-/// Similar to a thunk, except that it will hold on to a Set of
-/// AnyCancellable instances while your Combine pipelines process an async task.
+/// Similar to a thunk, except that it will retain a `Set` of
+/// `AnyCancellable` instances while your Combine pipelines process an async task.
 @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
 public final class PublisherAction<State>: Action {
 
@@ -35,19 +35,46 @@ public final class PublisherAction<State>: Action {
   }
 
   /// Instantiates an async action that retains Combine cancel objects.
-  /// - Parameter body: Function that is executed when this action
-  ///    is dispatched.
-  /// - Parameter body.dispatch: Dispatch an action.
-  /// - Parameter body.getState: Get state of the store.
-  /// - Parameter body.cancellables: Set of cancellables retained by this PublisherAction instance.
+  ///
+  ///     PublisherAction<MyState> { dispatch, getState, cancellables in
+  ///         myPublisher1
+  ///           ...
+  ///           .tap { ... }
+  ///           .store(in: &cancellables)
+  ///         myPublisher2
+  ///           ...
+  ///           .tap { ... }
+  ///           .store(in: &cancellables)
+  ///         ...
+  ///       }
+  ///
+  /// `body` function arguments:
+  /// - `dispatch`: Dispatch an action.
+  /// - `getState`: Get state of the store.
+  /// - `cancellables`: Set of cancellables retained by this PublisherAction instance.
+  ///
+  /// - Parameter body: Function that is executed when this action is dispatched.
   public init(body: @escaping Body) {
     self.body = body
   }
 
   /// Instantiates an async action that retains Combine cancel objects.
-  /// - Parameter body: A Context object.
+  ///
+  ///     PublisherAction<MyState> { context in
+  ///         myPublisher1
+  ///           ...
+  ///           .tap { ... }
+  ///           .store(in: &context.cancellables)
+  ///         myPublisher2
+  ///           ...
+  ///           .tap { ... }
+  ///           .store(in: &context.cancellables)
+  ///         ...
+  ///       }
+  ///
+  /// - Parameter body: Function that is executed when this action is dispatched.
   public init(_ body: @escaping (Context) -> Void) {
-    self.body = { dispatch, getState, cancellable in
+    self.body = { dispatch, getState, cancellables in
       let context = Context(dispatch, getState)
       body(context)
       cancellables = context.cancellables
@@ -59,13 +86,12 @@ public final class PublisherAction<State>: Action {
   func execute(
     dispatch: @escaping Dispatch,
     getState: @escaping GetState)
-    -> Set<AnyCancellable>
   {
     body(dispatch, getState, &cancellables)
   }
 
   // MARK: Private
 
-  private let body: Body
+  private let body: Body!
   private var cancellables = Cancellables()
 }

@@ -136,7 +136,9 @@ Or with the optional [`Store` extension](https://github.com/gilbox/Cloe#optional
     Button("Grow up", action: store[.growup])
 ```
 
-## Dispatching an async action with the `PublisherMiddleware`
+## Dispatching an async action with the publisher middleware
+
+Below is a simple example, read more about publisher middleware [here](./Sources/Cloe/PublisherMiddleware/README.md).
 
 ```swift
 

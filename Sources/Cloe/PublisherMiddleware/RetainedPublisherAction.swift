@@ -33,13 +33,13 @@ extension Publisher {
 
 /// Similar to a thunk, except that the middleware will retain your
 /// AnyCancellable instances while your Combine pipelines process an async task.
-/// This is different from `PublisherAction` because `PublisherAction` requires
-/// that you retain a reference to the `PublisherAction` instance.
-/// In a `PublisherAction`, your cancellables are retained by the `PublisherAction`
-/// instance, so as soon as you de-allocate that instance, your cancellables
-/// are de-referenced and as a result your pipelines are cancelled.
+///
+/// `RetainedPublisherAction` is different from `PublisherAction` because with `PublisherAction`,
+/// your cancellables are retained by the `PublisherAction` instance, and
+/// when you de-allocate that instance, the cancellables
+/// are de-referenced and the Combine pipelines cancelled.
 /// In `RetainedPublisherAction`, the cancellables are retained in the
-/// createPublisherMiddleware inner closure, so that the cancellables are
+/// `createPublisherMiddleware` inner closure, thus the cancellables are
 /// retained until one of the following two events:
 ///  - The cleanup() function is called as many times as the number of cancellables
 ///  - or the store is deallocated
@@ -77,18 +77,51 @@ public final class RetainedPublisherAction<State>: Action {
     }
   }
 
-  /// Instantiates an async action that retains Combine cancel objects.
-  /// - Parameter body: Function that is executed when this action
-  ///    is dispatched.
-  /// - Parameter body.dispatch: Dispatch an action.
-  /// - Parameter body.getState: Get state of the store.
-  /// - Parameter body.cancellables: Set of cancellables retained by this PublisherAction instance.
+  /// Instantiates an async action that retains Combine AnyCancellable objects.
+  ///
+  ///     RetainedPublisherAction<MyState> { dispatch, getState, cancellables, cleanup in
+  ///        myPublisher1
+  ///          ...
+  ///          .handleCleanup(cleanup)
+  ///          .tap { ... }   // <-- handleCleanup and store sandwhich the subscriber that returns AnyCancellable
+  ///          .store(in: &cancellables)
+  ///        myPublisher2
+  ///          ...
+  ///          .handleCleanup(cleanup)
+  ///          .tap { ... }
+  ///          .store(in: &cancellables)
+  ///        ...
+  ///      }
+  ///
+  /// body function arguments:
+  /// - `dispatch`: Dispatch an action to the store.
+  /// - `getState`: Get state of the store.
+  /// - `cancellables`: `Set` of `AnyCancellable` retained by the `createPublisherMiddleware` inner closure.
+  /// - `cleanup`: After this function is called once for every cancellable, the middleware releases this `RetainedPublisherAction` instance
+  ///
+  /// - Parameter body: Function that is executed when this action is dispatched.
+  ///
   public init(body: @escaping Body) {
     self.body = body
   }
 
   /// Instantiates an async action that retains Combine cancel objects.
-  /// - Parameter body: A Context object.
+  ///
+  ///      RetainedPublisherAction<MyState> { context in
+  ///         myPublisher1
+  ///           ...
+  ///           .handleCleanup(context.cleanup)
+  ///           .tap { ... }   // <-- handleCleanup and store sandwhich the subscriber that returns AnyCancellable
+  ///           .store(in: &context.cancellables)
+  ///         myPublisher2
+  ///           ...
+  ///           .handleCleanup(context.cleanup)
+  ///           .tap { ... }
+  ///           .store(in: &context.cancellables)
+  ///         ...
+  ///       }
+  ///
+  /// - Parameter body: Function that is executed when this action is dispatched.
   public init(_ body: @escaping (Context) -> Void) {
     self.body = { dispatch, getState, cancellables, cleanup in
       let context = Context(dispatch, getState, cleanup)
