@@ -83,7 +83,7 @@ public final class RetainedPublisherAction<State>: Action {
   ///        myPublisher1
   ///          ...
   ///          .handleCleanup(cleanup)
-  ///          .tap { ... }   // <-- handleCleanup and store sandwhich the subscriber that returns AnyCancellable
+  ///          .tap { ... }   // <-- handleCleanup and store sandwich the subscriber that returns AnyCancellable
   ///          .store(in: &cancellables)
   ///        myPublisher2
   ///          ...
@@ -111,7 +111,7 @@ public final class RetainedPublisherAction<State>: Action {
   ///         myPublisher1
   ///           ...
   ///           .handleCleanup(context.cleanup)
-  ///           .tap { ... }   // <-- handleCleanup and store sandwhich the subscriber that returns AnyCancellable
+  ///           .tap { ... }   // <-- handleCleanup and store sandwich the subscriber that returns AnyCancellable
   ///           .store(in: &context.cancellables)
   ///         myPublisher2
   ///           ...
