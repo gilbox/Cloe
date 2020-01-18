@@ -8,6 +8,17 @@ func asyncPublisher() -> AnyPublisher<Int, Never> {
   let p = PassthroughSubject<Int, Never>()
   DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak p] in
     p?.send(1)
+    p?.send(completion: .finished)
+  }
+  return p.eraseToAnyPublisher()
+}
+
+enum MyError: Error { case fail }
+func asyncErrorPublisher() -> AnyPublisher<Int, MyError> {
+  let p = PassthroughSubject<Int, MyError>()
+  DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak p] in
+    p?.send(1)
+    p?.send(completion: .failure(MyError.fail))
   }
   return p.eraseToAnyPublisher()
 }
