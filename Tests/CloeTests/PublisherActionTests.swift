@@ -26,10 +26,10 @@ final class PublisherActionTests: XCTestCase {
   }
 
   func testDoesNotRetain() {
-    let expectation = self.expectation(description: "completed async operation")
-    expectation.isInverted = true
+    let dontExpect = self.expectation(description: "completed async operation")
+    dontExpect.isInverted = true
 
-    let action = PublisherAction<AppState> { [weak expectation] dispatch, getState, cancellables in
+    let action = PublisherAction<AppState> { [weak dontExpect] dispatch, getState, cancellables in
       let _ = asyncPublisher()
         .sink(receiveCompletion: { _ in
         }) { _ in
@@ -45,10 +45,10 @@ final class PublisherActionTests: XCTestCase {
   }
 
   func testMiddlewareDoesNotRetainCancellables() {
-    let expectation = self.expectation(description: "completed async operation")
-    expectation.isInverted = true
+    let dontExpect = self.expectation(description: "completed async operation")
+    dontExpect.isInverted = true
 
-    appStore.dispatch(PublisherAction<AppState> { [weak expectation] dispatch, getState, cancellables in
+    appStore.dispatch(PublisherAction<AppState> { [weak dontExpect] dispatch, getState, cancellables in
       let _ = asyncPublisher()
         .sink(receiveCompletion: { _ in
         }) { _ in

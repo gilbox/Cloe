@@ -26,10 +26,10 @@ final class RetainedPublisherActionTests: XCTestCase {
   }
 
   func testDoesNotRetainWithoutCancellables() {
-    let expectation = self.expectation(description: "completed async operation")
-    expectation.isInverted = true
+    let dontExpect = self.expectation(description: "completed async operation")
+    dontExpect.isInverted = true
 
-    appStore.dispatch(RetainedPublisherAction<AppState> { [weak expectation] dispatch, getState, cancellables, cleanup in
+    appStore.dispatch(RetainedPublisherAction<AppState> { [weak dontExpect] dispatch, getState, cancellables, cleanup in
       let _ = asyncPublisher()
         .sink(receiveCompletion: { _ in
         }) { _ in
@@ -60,10 +60,10 @@ final class RetainedPublisherActionTests: XCTestCase {
   }
 
   func testCleansUpWhenCleanupIsCalledNTimes() {
-    let expectation = self.expectation(description: "completed async operation")
-    expectation.isInverted = true
+    let dontExpect = self.expectation(description: "completed async operation")
+    dontExpect.isInverted = true
 
-    appStore.dispatch(RetainedPublisherAction<AppState> { [weak expectation] dispatch, getState, cancellables, cleanup in
+    appStore.dispatch(RetainedPublisherAction<AppState> { [weak dontExpect] dispatch, getState, cancellables, cleanup in
       asyncPublisher()
         .sink(receiveCompletion: { _ in
         }) { _ in
