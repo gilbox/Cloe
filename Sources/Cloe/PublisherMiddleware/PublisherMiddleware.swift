@@ -22,11 +22,11 @@ public func createPublisherMiddleware<State>() -> Middleware<State> {
       case let publisherAction as PublisherAction<State>:
         publisherAction.execute(dispatch: fullDispatch, getState: getState)
       case let publisherAction as RetainedPublisherAction<State>:
-        let refCount = Box(0)
+        var refCount = 0
         let uuid = UUID()
         let cleanup = {
-          refCount.value -= 1
-          if refCount.value == 0 {
+          refCount -= 1
+          if refCount == 0 {
             cancellablesCache[uuid] = nil
           }
           // Note: Negative ref count can happen for 2 reasons:
@@ -37,8 +37,8 @@ public func createPublisherMiddleware<State>() -> Middleware<State> {
           dispatch: fullDispatch,
           getState: getState,
           cleanup: cleanup)
-        refCount.value += cancellables.count
-        if refCount.value > 0 {
+        refCount += cancellables.count
+        if refCount > 0 {
           cancellablesCache[uuid] = cancellables
         }
       default:

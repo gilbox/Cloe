@@ -6,7 +6,7 @@ import Combine
 
 func asyncPublisher() -> AnyPublisher<Int, Never> {
   let p = PassthroughSubject<Int, Never>()
-  DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) { [weak p] in
+  DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak p] in
     p?.send(1)
   }
   return p.eraseToAnyPublisher()
