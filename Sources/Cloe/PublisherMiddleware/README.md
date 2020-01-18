@@ -52,22 +52,6 @@ PublisherAction<MyState> { dispatch, getState, cancellables in
   }
 ```
 
-Alternate syntax:
-
-```swift
-PublisherAction<MyState> { context in
-    myPublisher1
-      ...
-      .tap { ... }
-      .store(in: &context.cancellables)
-    myPublisher2
-      ...
-      .tap { ... }
-      .store(in: &context.cancellables)
-    ...
-  }
-```
-
 ## `RetainedPublisherAction`
 
 ```swift
@@ -86,23 +70,6 @@ RetainedPublisherAction<MyState> { dispatch, getState, cancellables, cleanup in
 }
 ```
 
-Alternate syntax:
-
-```swift
-RetainedPublisherAction<MyState> { context in
-  myPublisher1
-    ...
-    .handleCleanup(context.cleanup)
-    .tap { ... }   // <-- handleCleanup and store sandwich the subscriber that returns AnyCancellable
-    .store(in: &context.cancellables)
-  myPublisher2
-    ...
-    .handleCleanup(context.cleanup)
-    .tap { ... }
-    .store(in: &context.cancellables)
-  ...
-}
-```
 ### `handleCleanup`
 
 `handleCleanup` (as seen in the previous code example)

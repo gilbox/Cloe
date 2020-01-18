@@ -18,22 +18,6 @@ public final class PublisherAction<State>: Action {
     _ cancellables: inout Cancellables)
     -> Void
 
-  /// Context makes it a bit easier to use code-completion
-  /// with a PublisherAction's alternate initializer
-  public final class Context {
-    public let dispatch: Dispatch
-    public let getState: GetState
-    public var cancellables = Cancellables()
-
-    init(
-      _ dispatch: @escaping Dispatch,
-      _ getState: @escaping GetState)
-    {
-      self.dispatch = dispatch
-      self.getState = getState
-    }
-  }
-
   /// Instantiates an async action that retains Combine cancel objects.
   ///
   ///     PublisherAction<MyState> { dispatch, getState, cancellables in
@@ -56,29 +40,6 @@ public final class PublisherAction<State>: Action {
   /// - Parameter body: Function that is executed when this action is dispatched.
   public init(body: @escaping Body) {
     self.body = body
-  }
-
-  /// Instantiates an async action that retains Combine cancel objects.
-  ///
-  ///     PublisherAction<MyState> { context in
-  ///         myPublisher1
-  ///           ...
-  ///           .tap { ... }
-  ///           .store(in: &context.cancellables)
-  ///         myPublisher2
-  ///           ...
-  ///           .tap { ... }
-  ///           .store(in: &context.cancellables)
-  ///         ...
-  ///       }
-  ///
-  /// - Parameter body: Function that is executed when this action is dispatched.
-  public init(_ body: @escaping (Context) -> Void) {
-    self.body = { dispatch, getState, cancellables in
-      let context = Context(dispatch, getState)
-      body(context)
-      cancellables = context.cancellables
-    }
   }
 
   // MARK: Internal

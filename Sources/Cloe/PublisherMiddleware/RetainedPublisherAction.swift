@@ -51,25 +51,6 @@ public final class RetainedPublisherAction<State>: Action {
     _ cleanup: @escaping Cleanup)
     -> Void
 
-  /// Context makes it a bit easier to use code-completion
-  /// with a PublisherAction's alternate initializer
-  public final class Context {
-    public let dispatch: Dispatch
-    public let getState: GetState
-    public var cancellables = Cancellables()
-    public let cleanup: Cleanup
-
-    init(
-      _ dispatch: @escaping Dispatch,
-      _ getState: @escaping GetState,
-      _ cleanup: @escaping Cleanup)
-    {
-      self.dispatch = dispatch
-      self.getState = getState
-      self.cleanup = cleanup
-    }
-  }
-
   /// Instantiates an async action that retains Combine AnyCancellable objects.
   ///
   ///     RetainedPublisherAction<MyState> { dispatch, getState, cancellables, cleanup in
@@ -96,31 +77,6 @@ public final class RetainedPublisherAction<State>: Action {
   ///
   public init(body: @escaping Body) {
     self.body = body
-  }
-
-  /// Instantiates an async action that retains Combine cancel objects.
-  ///
-  ///      RetainedPublisherAction<MyState> { context in
-  ///         myPublisher1
-  ///           ...
-  ///           .handleCleanup(context.cleanup)
-  ///           .tap { ... }   // <-- handleCleanup and store sandwich the subscriber that returns AnyCancellable
-  ///           .store(in: &context.cancellables)
-  ///         myPublisher2
-  ///           ...
-  ///           .handleCleanup(context.cleanup)
-  ///           .tap { ... }
-  ///           .store(in: &context.cancellables)
-  ///         ...
-  ///       }
-  ///
-  /// - Parameter body: Function that is executed when this action is dispatched.
-  public init(_ body: @escaping (Context) -> Void) {
-    self.body = { dispatch, getState, cancellables, cleanup in
-      let context = Context(dispatch, getState, cleanup)
-      body(context)
-      cancellables = context.cancellables
-    }
   }
 
   // MARK: Internal
