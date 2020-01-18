@@ -67,7 +67,6 @@ final class RetainedPublisherActionTests: XCTestCase {
       asyncPublisher()
         .sink(receiveCompletion: { _ in
         }) { _ in
-          print("sink")
           dispatch(AppAction.changeName)
           expectation?.fulfill()
         }
