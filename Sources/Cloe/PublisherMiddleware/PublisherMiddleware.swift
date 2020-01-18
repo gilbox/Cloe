@@ -3,6 +3,15 @@
 import Combine
 import Foundation
 
+/// The middleware for working with `PublisherAction` and `RetainedPublisherAction`
+///
+/// Add the middleware to your store, for example:
+///
+///     let store = AppStore(
+///       reducer: AppReducer(),
+///       state: AppState(),
+///       middlewares: [createPublisherMiddleware()])
+///
 @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
 public func createPublisherMiddleware<State>() -> Middleware<State> {
   var cancellablesCache = [UUID:Set<AnyCancellable>]()
