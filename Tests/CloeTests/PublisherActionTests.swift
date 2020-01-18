@@ -83,6 +83,7 @@ final class PublisherActionTests: XCTestCase {
 
   static var allTests = [
     ("testProvidesValidGetStateFunction", testProvidesValidGetStateFunction),
+    ("testDoesNotRetain", testDoesNotRetain)
     ("testMiddlewareDoesNotRetainCancellables", testMiddlewareDoesNotRetainCancellables),
     ("testRetainsCancellables", testRetainsCancellables),
   ]
