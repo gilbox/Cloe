@@ -28,8 +28,8 @@ public func createPublisherMiddleware<State>() -> Middleware<State> {
           dispatch: fullDispatch,
           getState: getState,
           cleanup: cleanup)
-        if cancellables.count > 0 {
-          refCount.value = cancellables.count
+        refCount.value += cancellables.count
+        if refCount.value > 0 {
           cancellablesCache[uuid] = cancellables
         }
       default:
