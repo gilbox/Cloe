@@ -205,7 +205,7 @@ If you are already using [CocoaPods](http://cocoapods.org), just add 'Cloe' to y
 If you are already using [Carthage](https://github.com/Carthage/Carthage), just add to your `Cartfile`:
 
 ```ogdl
-github "gilbox/Cloe" ~> 0.1.1
+github "gilbox/Cloe" ~> 0.2.0
 ```
 
 Then run `carthage update` to build the framework and drag the built `Cloe`.framework into your Xcode project.
