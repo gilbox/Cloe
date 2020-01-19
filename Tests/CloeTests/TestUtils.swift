@@ -25,6 +25,7 @@ func asyncErrorPublisher() -> AnyPublisher<Int, MyError> {
 
 struct AppState {
   var name: String = "Initial"
+  var age = 5
 }
 
 enum AppAction: Action {

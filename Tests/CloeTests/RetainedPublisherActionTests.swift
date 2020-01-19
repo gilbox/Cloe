@@ -34,7 +34,7 @@ final class RetainedPublisherActionTests: XCTestCase {
         .sink(receiveCompletion: { _ in
         }) { _ in
           dispatch(AppAction.changeName)
-          expectation?.fulfill()
+          dontExpect?.fulfill()
         }
     })
 
@@ -68,7 +68,7 @@ final class RetainedPublisherActionTests: XCTestCase {
         .sink(receiveCompletion: { _ in
         }) { _ in
           dispatch(AppAction.changeName)
-          expectation?.fulfill()
+          dontExpect?.fulfill()
         }
         .store(in: &cancellables)
 
@@ -76,7 +76,7 @@ final class RetainedPublisherActionTests: XCTestCase {
         .sink(receiveCompletion: { _ in
         }) { _ in
           dispatch(AppAction.changeName)
-          expectation?.fulfill()
+          dontExpect?.fulfill()
         }
         .store(in: &cancellables)
 

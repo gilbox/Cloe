@@ -34,7 +34,7 @@ final class PublisherActionTests: XCTestCase {
         .sink(receiveCompletion: { _ in
         }) { _ in
           dispatch(AppAction.changeName)
-          expectation?.fulfill()
+          dontExpect?.fulfill()
         }
     }
 
@@ -53,7 +53,7 @@ final class PublisherActionTests: XCTestCase {
         .sink(receiveCompletion: { _ in
         }) { _ in
           dispatch(AppAction.changeName)
-          expectation?.fulfill()
+          dontExpect?.fulfill()
         }
         .store(in: &cancellables)
     })
@@ -83,7 +83,7 @@ final class PublisherActionTests: XCTestCase {
 
   static var allTests = [
     ("testProvidesValidGetStateFunction", testProvidesValidGetStateFunction),
-    ("testDoesNotRetain", testDoesNotRetain)
+    ("testDoesNotRetain", testDoesNotRetain),
     ("testMiddlewareDoesNotRetainCancellables", testMiddlewareDoesNotRetainCancellables),
     ("testRetainsCancellables", testRetainsCancellables),
   ]
