@@ -113,6 +113,10 @@ struct MyView: View {
 }
 ```
 
+If you want to connect to the state of the store without defining a selector,
+use `ConnectStore` instead. Note that `ConnectStore` does not currently skip 
+duplicate states the way that `Connect` does.
+
 ## Dispatching a simple action
 
 Here's how you can dispatch a simple action:
