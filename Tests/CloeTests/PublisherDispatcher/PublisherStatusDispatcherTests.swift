@@ -4,16 +4,16 @@ import Combine
 import XCTest
 @testable import Cloe
 
-final class PublisherStateDispatcherTests: XCTestCase {
+final class PublisherStatusDispatcherTests: XCTestCase {
   struct AppState {
-    var foo: PublisherState<Int> = .initial
+    var foo: PublisherStatus = .initial
   }
 
   func testCompletingPublisher() {
     var states = [AppState]()
     var state = AppState()
     let dispatch: (Action) -> Void = { action in
-      guard let action = action as? PublisherStateAction<AppState> else { return }
+      guard let action = action as? PublisherDispatcherAction<AppState> else { return }
       action.update(&state)
       states.append(state)
     }
@@ -22,7 +22,7 @@ final class PublisherStateDispatcherTests: XCTestCase {
     var cancellables = Set<AnyCancellable>()
 
     publisher
-      .stateDispatcher(dispatch, statePath: \AppState.foo)
+      .statusDispatcher(dispatch, statePath: \AppState.foo)
       .sink { _ in }
       .store(in: &cancellables)
 
@@ -34,21 +34,15 @@ final class PublisherStateDispatcherTests: XCTestCase {
       XCTFail("Expected .loading state")
     }
 
-    if case .active(let value) = states[1].foo {
-      XCTAssertEqual(value, 8)
-    } else {
+    if case .active = states[1].foo {} else {
       XCTFail(".active != \(states[1])")
     }
 
-    if case .active(let value) = states[2].foo {
-      XCTAssertEqual(value, 420)
-    } else {
+    if case .active = states[2].foo {} else {
       XCTFail(".active  != \(states[2])")
     }
 
-    if case .completedWithOutput(let value) = states[3].foo {
-      XCTAssertEqual(value, 420)
-    } else {
+    if case .completed = states[3].foo {} else {
       XCTFail("Expect .completed state")
     }
 
@@ -59,7 +53,7 @@ final class PublisherStateDispatcherTests: XCTestCase {
     var states = [AppState]()
     var state = AppState()
     let dispatch: (Action) -> Void = { action in
-      guard let action = action as? PublisherStateAction<AppState> else { return }
+      guard let action = action as? PublisherDispatcherAction<AppState> else { return }
       action.update(&state)
       states.append(state)
     }
@@ -68,7 +62,7 @@ final class PublisherStateDispatcherTests: XCTestCase {
     var cancellables = Set<AnyCancellable>()
 
     publisher
-      .stateDispatcher(dispatch, statePath: \AppState.foo)
+      .statusDispatcher(dispatch, statePath: \AppState.foo)
       .sink { _ in }
       .store(in: &cancellables)
 
@@ -89,7 +83,7 @@ final class PublisherStateDispatcherTests: XCTestCase {
     var states = [AppState]()
     var state = AppState()
     let dispatch: (Action) -> Void = { action in
-      guard let action = action as? PublisherStateAction<AppState> else { return }
+      guard let action = action as? PublisherDispatcherAction<AppState> else { return }
       action.update(&state)
       states.append(state)
     }
@@ -99,7 +93,7 @@ final class PublisherStateDispatcherTests: XCTestCase {
     var cancellables = Set<AnyCancellable>()
 
     publisher
-      .stateDispatcher(dispatch, statePath: \AppState.foo)
+      .statusDispatcher(dispatch, statePath: \AppState.foo)
       .sink(receiveCompletion: {_ in}, receiveValue: {_ in})
       .store(in: &cancellables)
 
@@ -111,15 +105,11 @@ final class PublisherStateDispatcherTests: XCTestCase {
       XCTFail("Expected .loading state")
     }
 
-    if case .active(let value) = states[1].foo {
-      XCTAssertEqual(value, 8)
-    } else {
+    if case .active = states[1].foo {} else {
       XCTFail(".active != \(states[1])")
     }
 
-    if case .active(let value) = states[2].foo {
-      XCTAssertEqual(value, 420)
-    } else {
+    if case .active = states[2].foo {} else {
       XCTFail(".active  != \(states[2])")
     }
 
@@ -134,7 +124,7 @@ final class PublisherStateDispatcherTests: XCTestCase {
     var states = [AppState]()
     var state = AppState()
     let dispatch: (Action) -> Void = { action in
-      guard let action = action as? PublisherStateAction<AppState> else { return }
+      guard let action = action as? PublisherDispatcherAction<AppState> else { return }
       action.update(&state)
       states.append(state)
     }
@@ -144,7 +134,7 @@ final class PublisherStateDispatcherTests: XCTestCase {
     var cancellables = Set<AnyCancellable>()
 
     publisher
-      .stateDispatcher(dispatch, statePath: \AppState.foo)
+      .statusDispatcher(dispatch, statePath: \AppState.foo)
       .sink(receiveCompletion: {_ in}, receiveValue: {_ in})
       .store(in: &cancellables)
 
@@ -156,15 +146,11 @@ final class PublisherStateDispatcherTests: XCTestCase {
       XCTFail("Expected .loading state")
     }
 
-    if case .active(let value) = states[1].foo {
-      XCTAssertEqual(value, 8)
-    } else {
+    if case .active = states[1].foo {} else {
       XCTFail(".active != \(states[1])")
     }
 
-    if case .active(let value) = states[2].foo {
-      XCTAssertEqual(value, 420)
-    } else {
+    if case .active = states[2].foo {} else {
       XCTFail(".active  != \(states[2])")
     }
 

@@ -22,20 +22,6 @@ public enum PublisherState<Output> {
   }
 }
 
-public struct PublisherStateAction<State>: Action {
-  public let update: (inout State) -> Void
-}
-
-public class PublisherStateReducer<State>: Reducer {
-  public func reduce(state: inout State, action: Action) {
-    guard
-      let action = action as? PublisherStateAction<State>
-      else { return }
-
-    action.update(&state)
-  }
-}
-
 extension Publisher {
   public func stateDispatcher<State>(
     _ dispatch: @escaping Dispatch,
@@ -44,18 +30,18 @@ extension Publisher {
   {
     handleEvents(
       receiveOutput: { value in
-        dispatch(PublisherStateAction<State> { state in
+        dispatch(PublisherDispatcherAction<State> { state in
           state[keyPath: statePath] = .active(value)
         })
       },
       receiveCompletion: { completion in
         switch completion {
         case .failure(let error):
-          dispatch(PublisherStateAction<State> { state in
+          dispatch(PublisherDispatcherAction<State> { state in
             state[keyPath: statePath] = .failed(error)
           })
         case .finished:
-          dispatch(PublisherStateAction<State> { state in
+          dispatch(PublisherDispatcherAction<State> { state in
             if case .active(let value) = state[keyPath: statePath], State.self != Void.self {
               state[keyPath: statePath] = .completedWithOutput(value)
             } else {
@@ -65,12 +51,12 @@ extension Publisher {
         }
       },
       receiveCancel: {
-        dispatch(PublisherStateAction<State> { state in
+        dispatch(PublisherDispatcherAction<State> { state in
           state[keyPath: statePath] = .cancelled
         })
       },
       receiveRequest: { demand in
-        dispatch(PublisherStateAction<State> { state in
+        dispatch(PublisherDispatcherAction<State> { state in
           state[keyPath: statePath] = .loading
         })
       })
