@@ -55,7 +55,7 @@ public struct Connect<R: Reducer, SubState: Equatable, Content: View>: View {
   public var body: some View {
     Group {
       (state ?? selector(store.state)).map(content)
-    }.onReceive(store.subStatePublisher(selector)) { state in
+    }.onReceive(store.uniqueSubStatePublisher(selector)) { state in
       self.state = state
     }
   }
