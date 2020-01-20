@@ -20,6 +20,21 @@ public protocol Reducer {
   func reduce(state: inout State, action: Action)
 }
 
+/// Combine multiple reducers into one
+public class CombinedReducer<R: Reducer>: Reducer {
+  init(_ reducers: R...) {
+    self.reducers = reducers
+  }
+
+  public func reduce(state: inout R.State, action: Action) {
+    for reducer in reducers {
+      reducer.reduce(state: &state, action: action)
+    }
+  }
+
+  private let reducers: [R]
+}
+
 /// A way to plugin to the Store's dispatch function
 /// - Parameter fullDispatch: Dispatch an action
 /// - Parameter getState: Call to get the current state of the Store
@@ -74,16 +89,30 @@ public class Store<R: Reducer>: ObservableObject {
     { [weak self] in self?.dispatch(action) }
   }
 
-  /// Returns a publisher for the given derived state selector
+  /// Returns a publisher for the given derived state selector.
+  /// Removes repeated states.
   /// - Parameter selector: A function that returns a derived state
   ///     given the store's current state as input.
-  public func subStatePublisher<SubState: Equatable>(
+  public func uniqueSubStatePublisher<SubState: Equatable>(
     _ selector: @escaping StateSelector<R.State, SubState>)
     -> AnyPublisher<SubState, Never>
   {
     _statePublisher
       .map(selector)
       .removeDuplicates()
+      .eraseToAnyPublisher()
+  }
+
+  /// Returns a publisher for the given derived state selector.
+  /// Does not remove repeated states.
+  /// - Parameter selector: A function that returns a derived state
+  ///     given the store's current state as input.
+  public func subStatePublisher<SubState>(
+    _ selector: @escaping StateSelector<R.State, SubState>)
+    -> AnyPublisher<SubState, Never>
+  {
+    _statePublisher
+      .map(selector)
       .eraseToAnyPublisher()
   }
 

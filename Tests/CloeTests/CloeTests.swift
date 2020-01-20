@@ -15,7 +15,7 @@ final class CloeTests: XCTestCase {
       middlewares: [])
   }
 
-  func testSubStatePublisher_PublishesStateDeduped() {
+  func testSubStatePublisher_PublishesStateNotDeduped() {
     struct NameState: Equatable {
       var name: String
     }
@@ -38,6 +38,33 @@ final class CloeTests: XCTestCase {
     appStore.dispatch(AppAction.changeName)
     appStore.dispatch(AppAction.changeName)
 
+    XCTAssertEqual(values.map { $0.name }, ["Initial", "Changed Name", "Changed Name", "Changed Name"])
+    XCTAssertEqual(appStore.state.name, "Changed Name")
+  }
+
+  func testUniqueSubStatePublisher_PublishesStateDeduped() {
+    struct NameState: Equatable {
+      var name: String
+    }
+
+    var values = [NameState]()
+
+    XCTAssertEqual(appStore.state.name, "Initial")
+
+    var cancellables = Set<AnyCancellable>()
+
+    appStore.uniqueSubStatePublisher { state in
+      NameState(name: state.name)
+    }
+      .sink { subState in
+        values.append(subState)
+      }
+      .store(in: &cancellables)
+
+    appStore.dispatch(AppAction.changeName)
+    appStore.dispatch(AppAction.changeName)
+    appStore.dispatch(AppAction.changeName)
+
     XCTAssertEqual(values.map { $0.name }, ["Initial", "Changed Name"])
     XCTAssertEqual(appStore.state.name, "Changed Name")
   }
@@ -49,6 +76,8 @@ final class CloeTests: XCTestCase {
   }
 
   static var allTests = [
-    ("testSubStatePublisher_PublishesStateDeduped", testSubStatePublisher_PublishesStateDeduped),
+    ("testUniqueSubStatePublisher_PublishesStateDeduped", testUniqueSubStatePublisher_PublishesStateDeduped),
+    ("testSubStatePublisher_PublishesStateNotDeduped", testSubStatePublisher_PublishesStateNotDeduped),
+    ("testSubscript_ReturnsDispatchClosure", testSubscript_ReturnsDispatchClosure),
   ]
 }
