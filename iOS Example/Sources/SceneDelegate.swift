@@ -13,7 +13,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     // Create the SwiftUI view that provides the window contents.
     let store = AppStore(
-      reducer: AppReducer(),
+      reducer: appReducer,
       state: .initialValue,
       middlewares: [createPublisherMiddleware()])
 

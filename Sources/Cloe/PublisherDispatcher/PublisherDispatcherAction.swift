@@ -6,8 +6,8 @@ public struct PublisherDispatcherAction<State>: Action {
   public let update: (inout State) -> Void
 }
 
-public class PublisherDispatcherReducer<State>: Reducer {
-  public func reduce(state: inout State, action: Action) {
+public struct PublisherDispatcher {
+  static public func reducer<State>(state: inout State, action: Action) {
     guard
       let action = action as? PublisherDispatcherAction<State>
       else { return }

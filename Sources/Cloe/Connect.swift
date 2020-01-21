@@ -34,17 +34,17 @@ import SwiftUI
 ///       }
 ///     }
 @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
-public struct Connect<R: Reducer, SubState: Equatable, Content: View>: View {
+public struct Connect<State, SubState: Equatable, Content: View>: View {
 
   // MARK: Public
 
-  public var store: Store<R>
-  public var selector: StateSelector<R.State, SubState>
+  public var store: Store<State>
+  public var selector: StateSelector<State, SubState>
   public var content: (SubState) -> Content
 
   public init(
-    store: Store<R>,
-    selector: @escaping StateSelector<R.State, SubState>,
+    store: Store<State>,
+    selector: @escaping StateSelector<State, SubState>,
     content: @escaping (SubState) -> Content)
   {
     self.store = store
@@ -62,5 +62,5 @@ public struct Connect<R: Reducer, SubState: Equatable, Content: View>: View {
 
   // MARK: Private
 
-  @State private var state: SubState?
+  @SwiftUI.State private var state: SubState?
 }

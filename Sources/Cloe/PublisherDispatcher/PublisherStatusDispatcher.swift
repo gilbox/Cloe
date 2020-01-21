@@ -6,14 +6,24 @@ import Foundation
 public enum PublisherStatus {
   case initial
   case loading
-  case active
-  case failed(_ error: Error)
+  case loadingWithOutput
   case completed
+  case completedWithOutput
+  case failed(_ error: Error)
   case cancelled
+
+  public var isLoading: Bool {
+    switch self {
+    case .loading, .loadingWithOutput:
+      return true
+    default:
+      return false
+    }
+  }
 
   public var isDone: Bool {
     switch self {
-    case .cancelled, .completed, .failed(_):
+    case .cancelled, .completed, .completedWithOutput, .failed(_):
       return true
     default:
       return false
@@ -28,9 +38,9 @@ extension Publisher {
     -> Publishers.HandleEvents<Self>
   {
     handleEvents(
-      receiveOutput: { value in
+      receiveOutput: { _ in
         dispatch(PublisherDispatcherAction<State> { state in
-          state[keyPath: statePath] = .active
+          state[keyPath: statePath] = .loadingWithOutput
         })
       },
       receiveCompletion: { completion in
@@ -41,7 +51,11 @@ extension Publisher {
           })
         case .finished:
           dispatch(PublisherDispatcherAction<State> { state in
-            state[keyPath: statePath] = .completed
+            if case .loadingWithOutput = state[keyPath: statePath] {
+              state[keyPath: statePath] = .completedWithOutput
+            } else {
+              state[keyPath: statePath] = .completed
+            }
           })
         }
       },

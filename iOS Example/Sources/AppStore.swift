@@ -14,13 +14,11 @@ enum AppAction: Action {
   case growup
 }
 
-class AppReducer: Reducer {
-  func reduce(state: inout AppState, action: Action) {
-    guard let action = action as? AppAction else { return }
-    switch action {
-    case .growup:
-      state.age += 1
-    }
+let appReducer: Reducer<AppState> = { (state: inout AppState, action: Action) in
+  guard let action = action as? AppAction else { return }
+  switch action {
+  case .growup:
+    state.age += 1
   }
 }
 
@@ -34,4 +32,4 @@ extension Store {
   }
 }
 
-typealias AppStore = Store<AppReducer>
+typealias AppStore = Store<AppState>

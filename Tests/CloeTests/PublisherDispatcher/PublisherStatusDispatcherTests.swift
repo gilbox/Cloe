@@ -34,15 +34,15 @@ final class PublisherStatusDispatcherTests: XCTestCase {
       XCTFail("Expected .loading state")
     }
 
-    if case .active = states[1].foo {} else {
-      XCTFail(".active != \(states[1])")
+    if case .loadingWithOutput = states[1].foo {} else {
+      XCTFail(".loadingWithOutput != \(states[1])")
     }
 
-    if case .active = states[2].foo {} else {
-      XCTFail(".active  != \(states[2])")
+    if case .loadingWithOutput = states[2].foo {} else {
+      XCTFail(".loadingWithOutput  != \(states[2])")
     }
 
-    if case .completed = states[3].foo {} else {
+    if case .completedWithOutput = states[3].foo {} else {
       XCTFail("Expect .completed state")
     }
 
@@ -105,12 +105,12 @@ final class PublisherStatusDispatcherTests: XCTestCase {
       XCTFail("Expected .loading state")
     }
 
-    if case .active = states[1].foo {} else {
-      XCTFail(".active != \(states[1])")
+    if case .loadingWithOutput = states[1].foo {} else {
+      XCTFail(".loadingWithOutput != \(states[1])")
     }
 
-    if case .active = states[2].foo {} else {
-      XCTFail(".active  != \(states[2])")
+    if case .loadingWithOutput = states[2].foo {} else {
+      XCTFail(".loadingWithOutput  != \(states[2])")
     }
 
     if case .failed(_) = states[3].foo {} else {
@@ -146,12 +146,12 @@ final class PublisherStatusDispatcherTests: XCTestCase {
       XCTFail("Expected .loading state")
     }
 
-    if case .active = states[1].foo {} else {
-      XCTFail(".active != \(states[1])")
+    if case .loadingWithOutput = states[1].foo {} else {
+      XCTFail(".loadingWithOutput != \(states[1])")
     }
 
-    if case .active = states[2].foo {} else {
-      XCTFail(".active  != \(states[2])")
+    if case .loadingWithOutput = states[2].foo {} else {
+      XCTFail(".loadingWithOutput  != \(states[2])")
     }
 
     if case .cancelled = states[3].foo {} else {

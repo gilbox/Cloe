@@ -14,25 +14,15 @@ public typealias Dispatch = (Action) -> Void
 /// async logic, only pure functions. Async tasks should be handled with
 /// Thunk or PublisherAction or some other special middleware-provided
 /// action.
-public protocol Reducer {
-  associatedtype State
-
-  func reduce(state: inout State, action: Action)
-}
+public typealias Reducer<State> = (_ state: inout State, _ action: Action) -> Void
 
 /// Combine multiple reducers into one
-public class CombinedReducer<R: Reducer>: Reducer {
-  init(_ reducers: R...) {
-    self.reducers = reducers
-  }
-
-  public func reduce(state: inout R.State, action: Action) {
+public func combinedReducers<State>(_ reducers: Reducer<State>...) -> Reducer<State> {
+  { (state: inout State, action: Action) in
     for reducer in reducers {
-      reducer.reduce(state: &state, action: action)
+      reducer(&state, action)
     }
   }
-
-  private let reducers: [R]
 }
 
 /// A way to plugin to the Store's dispatch function
@@ -47,17 +37,17 @@ public typealias Middleware<State> = (
 
 /// A Cloe Store
 @available(iOS 13, macOS 10.15, tvOS 13, watchOS 6, *)
-public class Store<R: Reducer>: ObservableObject {
+public class Store<State>: ObservableObject {
 
   // MARK: Public
 
-  public typealias StoreMiddleware = Middleware<R.State>
+  public typealias StoreMiddleware = Middleware<State>
 
   /// Create a Store
   /// - Parameter reducer: Reducer for your store
   /// - Parameter state: Initial state of the store
   /// - Parameter middlewares: An array of middleware
-  public init(reducer: R, state: R.State, middlewares: [StoreMiddleware]) {
+  public init(reducer: @escaping Reducer<State>, state: State, middlewares: [StoreMiddleware]) {
     _statePublisher = CurrentValueSubject(state)
     statePublisher = _statePublisher.eraseToAnyPublisher()
 
@@ -67,7 +57,7 @@ public class Store<R: Reducer>: ObservableObject {
   }
 
   /// Publishes the current state of the store
-  public let statePublisher: AnyPublisher<R.State, Never>
+  public let statePublisher: AnyPublisher<State, Never>
 
   public var middlewares: [StoreMiddleware] {
     didSet {
@@ -76,7 +66,7 @@ public class Store<R: Reducer>: ObservableObject {
   }
 
   /// Current state of the store
-  public var state: R.State {
+  public var state: State {
     _statePublisher.value
   }
 
@@ -94,7 +84,7 @@ public class Store<R: Reducer>: ObservableObject {
   /// - Parameter selector: A function that returns a derived state
   ///     given the store's current state as input.
   public func uniqueSubStatePublisher<SubState: Equatable>(
-    _ selector: @escaping StateSelector<R.State, SubState>)
+    _ selector: @escaping StateSelector<State, SubState>)
     -> AnyPublisher<SubState, Never>
   {
     _statePublisher
@@ -108,7 +98,7 @@ public class Store<R: Reducer>: ObservableObject {
   /// - Parameter selector: A function that returns a derived state
   ///     given the store's current state as input.
   public func subStatePublisher<SubState>(
-    _ selector: @escaping StateSelector<R.State, SubState>)
+    _ selector: @escaping StateSelector<State, SubState>)
     -> AnyPublisher<SubState, Never>
   {
     _statePublisher
@@ -118,9 +108,9 @@ public class Store<R: Reducer>: ObservableObject {
 
   // MARK: Private
 
-  private typealias GetState = () -> R.State?
-  private let _statePublisher: CurrentValueSubject<R.State, Never>
-  private let reducer: R
+  private typealias GetState = () -> State?
+  private let _statePublisher: CurrentValueSubject<State, Never>
+  private let reducer: Reducer<State>
   private var cancellables = [AnyCancellable]()
   private lazy var dispatchFunction: Dispatch = {
     [weak self] in self?.defaultDispatch(action: $0)
@@ -139,7 +129,7 @@ public class Store<R: Reducer>: ObservableObject {
 
   private func defaultDispatch(action: Action) {
     var state = _statePublisher.value
-    reducer.reduce(state: &state, action: action)
+    reducer(&state, action)
     _statePublisher.send(state)
   }
 }

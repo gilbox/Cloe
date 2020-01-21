@@ -32,15 +32,13 @@ enum AppAction: Action {
   case changeName
 }
 
-class AppReducer: Reducer {
-  func reduce(state: inout AppState, action: Action) {
-    switch action {
-    case AppAction.changeName:
-      state.name = "Changed Name"
-    default:
-      break
-    }
+func appReducer(state: inout AppState, action: Action) {
+  switch action {
+  case AppAction.changeName:
+    state.name = "Changed Name"
+  default:
+    break
   }
 }
 
-typealias AppStore = Store<AppReducer>
+typealias AppStore = Store<AppState>

@@ -34,16 +34,16 @@ final class PublisherStateDispatcherTests: XCTestCase {
       XCTFail("Expected .loading state")
     }
 
-    if case .active(let value) = states[1].foo {
+    if case .loadingWithOutput(let value) = states[1].foo {
       XCTAssertEqual(value, 8)
     } else {
-      XCTFail(".active != \(states[1])")
+      XCTFail(".loadingWithOutput != \(states[1])")
     }
 
-    if case .active(let value) = states[2].foo {
+    if case .loadingWithOutput(let value) = states[2].foo {
       XCTAssertEqual(value, 420)
     } else {
-      XCTFail(".active  != \(states[2])")
+      XCTFail(".loadingWithOutput  != \(states[2])")
     }
 
     if case .completedWithOutput(let value) = states[3].foo {
@@ -111,16 +111,16 @@ final class PublisherStateDispatcherTests: XCTestCase {
       XCTFail("Expected .loading state")
     }
 
-    if case .active(let value) = states[1].foo {
+    if case .loadingWithOutput(let value) = states[1].foo {
       XCTAssertEqual(value, 8)
     } else {
-      XCTFail(".active != \(states[1])")
+      XCTFail(".loadingWithOutput != \(states[1])")
     }
 
-    if case .active(let value) = states[2].foo {
+    if case .loadingWithOutput(let value) = states[2].foo {
       XCTAssertEqual(value, 420)
     } else {
-      XCTFail(".active  != \(states[2])")
+      XCTFail(".loadingWithOutput  != \(states[2])")
     }
 
     if case .failed(_) = states[3].foo {} else {
@@ -156,16 +156,16 @@ final class PublisherStateDispatcherTests: XCTestCase {
       XCTFail("Expected .loading state")
     }
 
-    if case .active(let value) = states[1].foo {
+    if case .loadingWithOutput(let value) = states[1].foo {
       XCTAssertEqual(value, 8)
     } else {
-      XCTFail(".active != \(states[1])")
+      XCTFail(".loadingWithOutput != \(states[1])")
     }
 
-    if case .active(let value) = states[2].foo {
+    if case .loadingWithOutput(let value) = states[2].foo {
       XCTAssertEqual(value, 420)
     } else {
-      XCTFail(".active  != \(states[2])")
+      XCTFail(".loadingWithOutput  != \(states[2])")
     }
 
     if case .cancelled = states[3].foo {} else {

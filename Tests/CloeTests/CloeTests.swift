@@ -10,7 +10,7 @@ final class CloeTests: XCTestCase {
   override func setUp() {
     super.setUp()
     appStore = Store(
-      reducer: AppReducer(),
+      reducer: appReducer,
       state: AppState(),
       middlewares: [])
   }
