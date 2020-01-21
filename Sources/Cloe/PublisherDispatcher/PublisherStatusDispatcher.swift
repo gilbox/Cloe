@@ -3,6 +3,7 @@
 import Combine
 import Foundation
 
+/// Track the status of a Combine Publisher
 public enum PublisherStatus<Failure: Error> {
   case initial
   case loading
@@ -64,6 +65,11 @@ extension PublisherStatus: Equatable {
 }
 
 extension Publisher {
+  /// Automatically dispatches actions on your behalf to update the
+  /// state of a `PublisherStatus` object in your store.
+  ///
+  /// The dispatched actions are not intended to be used in any way
+  /// that isn't already supported by the PublisherDispatcher reducer.
   public func statusDispatcher<State>(
     _ dispatch: @escaping Dispatch,
     statePath: WritableKeyPath<State, PublisherStatus<Failure>>)
