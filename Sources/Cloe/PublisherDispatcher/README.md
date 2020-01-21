@@ -2,7 +2,7 @@
 
 ## Overview
 
-The publisher dispatcher handles a common task in a Redux application where there is some
+The publisher dispatcher handles a common challenge in a Redux application where there is some
 async task and we need to track the progress of that task. We may need to know that the
 task is *loading*, or *completed*, or that it has *failed* or been *cancelled*.
 
@@ -30,7 +30,7 @@ into this:
 
 ```swift
   document.save()
-    .statusDispatcher(dispatch, statePath: \AppState.saveStatus)
+    .stateDispatcher(dispatch, statePath: \AppState.saveStatus)
     .sink(receiveCompletion: { _ in}, receiveValue: {_ in })
     .store(in: &cancellables)
 ```
