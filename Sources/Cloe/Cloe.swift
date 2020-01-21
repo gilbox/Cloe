@@ -75,6 +75,7 @@ public class Store<State>: ObservableObject {
     dispatchFunction(action)
   }
 
+  /// Returns a function that dispatches an action upon invocation
   public subscript(_ action: Action) -> (() -> Void) {
     { [weak self] in self?.dispatch(action) }
   }
