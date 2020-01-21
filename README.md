@@ -160,6 +160,10 @@ Below is a simple example, read more about publisher middleware [here](./Sources
   }
 ```
 
+## Tracking async task progress with publisher dispatcher
+
+[Publisher dispatcher documentation](./Sources/Cloe/PublisherDispatcher/README.md).
+
 ## How is it different from ReSwift?
 
 - ReSwift is battle tested.
