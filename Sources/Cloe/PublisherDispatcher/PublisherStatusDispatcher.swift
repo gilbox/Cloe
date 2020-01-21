@@ -3,13 +3,13 @@
 import Combine
 import Foundation
 
-public enum PublisherStatus {
+public enum PublisherStatus<Failure: Error> {
   case initial
   case loading
   case loadingWithOutput
   case completed
   case completedWithOutput
-  case failed(_ error: Error)
+  case failed(_ error: Failure)
   case cancelled
 }
 
@@ -66,7 +66,7 @@ extension PublisherStatus: Equatable {
 extension Publisher {
   public func statusDispatcher<State>(
     _ dispatch: @escaping Dispatch,
-    statePath: WritableKeyPath<State, PublisherStatus>)
+    statePath: WritableKeyPath<State, PublisherStatus<Failure>>)
     -> Publishers.HandleEvents<Self>
   {
     handleEvents(

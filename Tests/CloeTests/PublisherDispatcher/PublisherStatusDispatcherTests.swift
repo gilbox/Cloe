@@ -6,7 +6,7 @@ import XCTest
 
 final class PublisherStatusDispatcherTests: XCTestCase {
   struct AppState {
-    var foo: PublisherStatus = .initial
+    var foo: PublisherStatus<Never> = .initial
   }
 
   func testCompletingPublisher() {
@@ -80,6 +80,11 @@ final class PublisherStatusDispatcherTests: XCTestCase {
   }
 
   func testFailingPublisher() {
+    enum MyError: Error { case oops }
+    struct AppState {
+      var foo: PublisherStatus<MyError> = .initial
+    }
+
     var states = [AppState]()
     var state = AppState()
     let dispatch: (Action) -> Void = { action in
@@ -88,7 +93,6 @@ final class PublisherStatusDispatcherTests: XCTestCase {
       states.append(state)
     }
 
-    enum MyError: Error { case oops }
     let publisher = PassthroughSubject<Int, MyError>()
     var cancellables = Set<AnyCancellable>()
 
@@ -129,8 +133,7 @@ final class PublisherStatusDispatcherTests: XCTestCase {
       states.append(state)
     }
 
-    enum MyError: Error { case oops }
-    let publisher = PassthroughSubject<Int, MyError>()
+    let publisher = PassthroughSubject<Int, Never>()
     var cancellables = Set<AnyCancellable>()
 
     publisher
