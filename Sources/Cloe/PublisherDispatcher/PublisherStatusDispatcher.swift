@@ -11,10 +11,21 @@ public enum PublisherStatus {
   case completedWithOutput
   case failed(_ error: Error)
   case cancelled
+}
 
+extension PublisherStatus {
   public var isLoading: Bool {
     switch self {
     case .loading, .loadingWithOutput:
+      return true
+    default:
+      return false
+    }
+  }
+
+  public var isCompleted: Bool {
+    switch self {
+    case .completed, .completedWithOutput:
       return true
     default:
       return false

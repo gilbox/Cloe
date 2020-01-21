@@ -11,7 +11,9 @@ public enum PublisherState<Output> {
   case completedWithOutput(_ value: Output)
   case failed(_ error: Error)
   case cancelled
+}
 
+extension PublisherState {
   public var isLoading: Bool {
     switch self {
     case .loading, .loadingWithOutput(_):
