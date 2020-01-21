@@ -42,6 +42,27 @@ extension PublisherStatus {
   }
 }
 
+extension PublisherStatus: Equatable {
+  public static func == (lhs: PublisherStatus, rhs: PublisherStatus) -> Bool {
+    switch (lhs, rhs) {
+    case (.initial, .initial),
+         (.loading, .loading),
+         (.loadingWithOutput, .loadingWithOutput),
+         (.completed, .completed),
+         (.completedWithOutput, .completedWithOutput),
+         (.cancelled, .cancelled),
+          // Since a Publisher can only fail once and it must
+          // enter a different state before failing, this should
+          // be the correct assumption for the failed case so long as
+          // we don't do anything weird with PublisherStatus
+         (.failed(_), .failed(_)):
+      return true
+    default:
+      return false
+    }
+  }
+}
+
 extension Publisher {
   public func statusDispatcher<State>(
     _ dispatch: @escaping Dispatch,
