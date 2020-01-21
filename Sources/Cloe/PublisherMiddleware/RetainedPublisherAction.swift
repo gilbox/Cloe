@@ -9,7 +9,7 @@ extension Publisher {
   /// zeros out the references for the pipeline, so long as there are no async
   /// operations after handleCleanup.
   public func handleCleanup(_ cleanup: @escaping () -> Void) -> Publishers.HandleEvents<Self> {
-    let complete = Box(false)
+    let complete = Ref(false)
     return handleEvents(
       receiveCompletion: { _ in
         if complete.value { return }
