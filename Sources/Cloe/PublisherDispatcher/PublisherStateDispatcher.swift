@@ -23,6 +23,15 @@ extension PublisherState {
     }
   }
 
+  public var isCompleted: Bool {
+    switch self {
+    case .completed, .completedWithOutput(_):
+      return true
+    default:
+      return false
+    }
+  }
+
   public var isDone: Bool {
     switch self {
     case .cancelled, .completedWithOutput(_), .completed, .failed(_):
