@@ -3,13 +3,14 @@
 import Combine
 import Foundation
 
-public enum PublisherState<Output> {
+/// Track the state of a Combine Publisher
+public enum PublisherState<Output, Failure: Error> {
   case initial
   case loading
   case loadingWithOutput(_ value: Output)
   case completed
   case completedWithOutput(_ value: Output)
-  case failed(_ error: Error)
+  case failed(_ error: Failure)
   case cancelled
 }
 
@@ -42,10 +43,36 @@ extension PublisherState {
   }
 }
 
+extension PublisherState: Equatable where Output: Equatable {
+  public static func == (lhs: PublisherState, rhs: PublisherState) -> Bool {
+    switch (lhs, rhs) {
+    case (.initial, .initial),
+         (.loading, .loading),
+         (.completed, .completed),
+         (.cancelled, .cancelled),
+          // Since a Publisher can only fail once and it must
+          // enter a different state before failing, this should
+          // be the correct assumption for the failed case so long as
+          // we don't do anything weird with PublisherStatus
+         (.failed(_), .failed(_)):
+      return true
+    case (.loadingWithOutput(let a), .loadingWithOutput(let b)),
+         (.completedWithOutput(let a), .completedWithOutput(let b)):
+      return a == b
+    default:
+      return false
+    }
+  }
+}
+
 extension Publisher {
+  /// Automatically dispatches actions on your behalf to update the
+  /// state of a `PublisherState` object in your store. The dispatched
+  /// actions are not intended to be used in any way that isn't already supported
+  /// by the PublisherDispatcher reducer.
   public func stateDispatcher<State>(
     _ dispatch: @escaping Dispatch,
-    statePath: WritableKeyPath<State, PublisherState<Output>>)
+    statePath: WritableKeyPath<State, PublisherState<Output, Failure>>)
     -> Publishers.HandleEvents<Self>
   {
     handleEvents(
