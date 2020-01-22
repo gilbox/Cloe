@@ -35,6 +35,25 @@ into this:
     .store(in: &cancellables)
 ```
 
+## Setup
+
+Your store needs to know how to process publisher dispatcher actions.
+Cloe includes a reducer for this purpose. You can use `combinedReducer`
+to install it in your store.
+
+```swift
+let store = AppStore(
+  reducer: combinedReducer(appReducer, publisherDispatcherReducer),
+  state: AppState(),
+  middlewares: [createPublisherMiddleware()])
+```
+
+Alternatively, you can add the following line to your own reducer:
+
+```swift
+  (action as? PublisherDispatcherAction<AppState>)?.update(&state)
+```
+
 ## Usage: `PublisherStatus`
 
 Use `PublisherStatus` when you only need to track the status of the publisher, not it's output.

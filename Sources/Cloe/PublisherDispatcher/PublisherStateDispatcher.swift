@@ -78,18 +78,18 @@ extension Publisher {
   {
     handleEvents(
       receiveOutput: { value in
-        dispatch(PublisherDispatcherAction<State> { state in
+        dispatch(PublisherDispatcherAction<State>(.loadingWithOutput) { state in
           state[keyPath: statePath] = .loadingWithOutput(value)
         })
       },
       receiveCompletion: { completion in
         switch completion {
         case .failure(let error):
-          dispatch(PublisherDispatcherAction<State> { state in
+          dispatch(PublisherDispatcherAction<State>(.failed) { state in
             state[keyPath: statePath] = .failed(error)
           })
         case .finished:
-          dispatch(PublisherDispatcherAction<State> { state in
+          dispatch(PublisherDispatcherAction<State>(.finished) { state in
             if case .loadingWithOutput(let value) = state[keyPath: statePath] {
               state[keyPath: statePath] = .completedWithOutput(value)
             } else {
@@ -99,12 +99,12 @@ extension Publisher {
         }
       },
       receiveCancel: {
-        dispatch(PublisherDispatcherAction<State> { state in
+        dispatch(PublisherDispatcherAction<State>(.cancelled) { state in
           state[keyPath: statePath] = .cancelled
         })
       },
-      receiveRequest: { demand in
-        dispatch(PublisherDispatcherAction<State> { state in
+      receiveRequest: { _ in
+        dispatch(PublisherDispatcherAction<State>(.loading) { state in
           state[keyPath: statePath] = .loading
         })
       })

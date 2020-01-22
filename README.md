@@ -27,13 +27,11 @@ typealias AppStore = Store<AppReducer>
 ## Setup your reducer
 
 ```swift
-class AppReducer: Reducer {
-  func reduce(state: inout AppState, action: Action) {
-    guard let action = action as? AppAction else { return }
-    switch action {
-    case .growup:
-      state.age += 1
-    }
+func appReducer(state: inout AppState, action: Action) {
+  guard let action = action as? AppAction else { return }
+  switch action {
+  case .growup:
+    state.age += 1
   }
 }
 ```
@@ -45,7 +43,7 @@ class AppReducer: Reducer {
 // this middleware allows us to use `PublisherAction`
 // later to dispatch an async action.
 let store = AppStore(
-  reducer: AppReducer(),
+  reducer: appReducer,
   state: .initialValue,
   middlewares: [createPublisherMiddleware()])
 
