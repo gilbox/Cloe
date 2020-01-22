@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 Cloe adheres to [Semantic Versioning](http://semver.org/).
 
+## 0.3.0
+
+- PublisherDispatcher
+- Refactor reducer to be a function
+- Rename Box to Ref
+- `uniqueSubstatePublisher`
+
 ## 0.2.0
 
 - Add `RetainedPublisherAction`

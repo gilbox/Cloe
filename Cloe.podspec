@@ -13,7 +13,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "Cloe"
-  spec.version      = "0.2.0"
+  spec.version      = "0.3.0"
   spec.summary      = "Cloe is Redux on Combine for SwiftUI with excellent feng shui."
 
   spec.description  = <<-DESC
