@@ -38,7 +38,8 @@ public final class PublisherAction<State>: Action {
   /// - `cancellables`: Set of cancellables retained by this PublisherAction instance.
   ///
   /// - Parameter body: Function that is executed when this action is dispatched.
-  public init(body: @escaping Body) {
+  public init(description: String? = nil, body: @escaping Body) {
+    debugDescription = description
     self.body = body
   }
 
@@ -53,6 +54,13 @@ public final class PublisherAction<State>: Action {
 
   // MARK: Private
 
+  private let debugDescription: String?
   private let body: Body!
   private var cancellables = Cancellables()
+}
+
+extension PublisherAction: CustomStringConvertible {
+  public var description: String {
+    "[PublisherAction<\(type(of: State.self))>] \(debugDescription ?? "") (\(cancellables.count) cancellables)"
+  }
 }

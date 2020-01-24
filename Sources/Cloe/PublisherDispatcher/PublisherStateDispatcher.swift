@@ -73,23 +73,28 @@ extension Publisher {
   /// that isn't already supported by the PublisherDispatcher reducer.
   public func stateDispatcher<State>(
     _ dispatch: @escaping Dispatch,
-    statePath: WritableKeyPath<State, PublisherState<Output, Failure>>)
+    statePath: WritableKeyPath<State, PublisherState<Output, Failure>>,
+    description: String? = nil)
     -> Publishers.HandleEvents<Self>
   {
-    handleEvents(
+    var fullDescription = "[StateDispatcher]"
+    if let description = description {
+      fullDescription += " \(description)"
+    }
+    return handleEvents(
       receiveOutput: { value in
-        dispatch(PublisherDispatcherAction<State>(.loadingWithOutput) { state in
+        dispatch(PublisherDispatcherAction<State>(.loadingWithOutput, description: fullDescription) { state in
           state[keyPath: statePath] = .loadingWithOutput(value)
         })
       },
       receiveCompletion: { completion in
         switch completion {
         case .failure(let error):
-          dispatch(PublisherDispatcherAction<State>(.failed) { state in
+          dispatch(PublisherDispatcherAction<State>(.failed, description: fullDescription) { state in
             state[keyPath: statePath] = .failed(error)
           })
         case .finished:
-          dispatch(PublisherDispatcherAction<State>(.finished) { state in
+          dispatch(PublisherDispatcherAction<State>(.finished, description: fullDescription) { state in
             if case .loadingWithOutput(let value) = state[keyPath: statePath] {
               state[keyPath: statePath] = .completedWithOutput(value)
             } else {
@@ -99,12 +104,12 @@ extension Publisher {
         }
       },
       receiveCancel: {
-        dispatch(PublisherDispatcherAction<State>(.cancelled) { state in
+        dispatch(PublisherDispatcherAction<State>(.cancelled, description: fullDescription) { state in
           state[keyPath: statePath] = .cancelled
         })
       },
       receiveRequest: { _ in
-        dispatch(PublisherDispatcherAction<State>(.loading) { state in
+        dispatch(PublisherDispatcherAction<State>(.loading, description: fullDescription) { state in
           state[keyPath: statePath] = .loading
         })
       })

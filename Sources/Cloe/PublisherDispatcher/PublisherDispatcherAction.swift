@@ -15,15 +15,23 @@ public struct PublisherDispatcherAction<State>: Action {
   }
 
   public let event: Event
+  public let debugDescription: String?
   public let update: (inout State) -> Void
 
   /// Create an action with a payload that performs a state transformation
   /// - Parameter event: The type of update being performed. You can use this for
   ///   observing the state change, it is ignored by `publisherDispatcherReducer`.
   /// - Parameter update: Closure that performs an update. Invoked in the reducer.
-  public init(_ event: Event, _ update: @escaping (inout State) -> Void) {
+  public init(_ event: Event, description: String?, _ update: @escaping (inout State) -> Void) {
     self.event = event
+    debugDescription = description
     self.update = update
+  }
+}
+
+extension PublisherDispatcherAction: CustomStringConvertible {
+  public var description: String {
+    "[PublisherDispatcherAction<\(type(of: State.self))>] \(debugDescription ?? "") event:\(event.rawValue)"
   }
 }
 

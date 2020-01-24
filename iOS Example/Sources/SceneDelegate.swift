@@ -15,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     let store = AppStore(
       reducer: appReducer,
       state: .initialValue,
-      middlewares: [createPublisherMiddleware()])
+      middlewares: [createLogMiddleware(), createPublisherMiddleware()])
 
     let contentView = ContentView().environmentObject(store)
 

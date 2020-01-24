@@ -41,9 +41,10 @@ struct MyChild: View {
 
   @EnvironmentObject private var store: AppStore
 
-  private let delayedGrowup = PublisherAction<AppState> { dispatch, getState, cancellables in
+  private let delayedGrowup = PublisherAction<AppState>(description: "delayedGrowup") { dispatch, getState, cancellables in
     Just(())
       .delay(for: 2, scheduler: RunLoop.main)
+      .statusDispatcher(dispatch, statePath: \AppState.growupStatus, description: "growup status")
       .sink { _ in
         dispatch(AppAction.growup)
       }

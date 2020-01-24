@@ -6,6 +6,7 @@ struct AppState {
   var appName = "Demo App"
   var age = 6
   var names = ["hank", "cloe", "spike", "joffrey", "fido", "kahlil", "malik"]
+  var growupStatus: PublisherStatus<Never> = .initial
 
   static let initialValue = AppState()
 }

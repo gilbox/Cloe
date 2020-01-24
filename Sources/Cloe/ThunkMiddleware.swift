@@ -10,13 +10,24 @@ public struct Thunk<State>: Action {
     _ getState: @escaping () -> State?)
     -> Void
 
-  public init(body: @escaping Body) {
+  public init(description: String? = nil, body: @escaping Body) {
+    debugDescription = description
     self.body = body
   }
 
   // MARK: Internal
 
   let body: Body
+
+  // MARK: Private
+
+  private let debugDescription: String?
+}
+
+extension Thunk: CustomStringConvertible {
+  public var description: String {
+    "[Thunk<\(type(of: State.self))>] \(debugDescription ?? "")"
+  }
 }
 
 public func createThunkMiddleware<State>() -> Middleware<State> {
