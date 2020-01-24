@@ -37,6 +37,7 @@ public final class PublisherAction<State>: Action {
   /// - `getState`: Get state of the store.
   /// - `cancellables`: Set of cancellables retained by this PublisherAction instance.
   ///
+  /// - Parameter description: Description of this action for debugging/logging
   /// - Parameter body: Function that is executed when this action is dispatched.
   public init(description: String? = nil, body: @escaping Body) {
     debugDescription = description

@@ -73,9 +73,11 @@ public final class RetainedPublisherAction<State>: Action {
   /// - `cancellables`: `Set` of `AnyCancellable` retained by the `createPublisherMiddleware` inner closure.
   /// - `cleanup`: After this function is called once for every cancellable, the middleware releases this `RetainedPublisherAction` instance
   ///
+  /// - Parameter description: Description of this action for debugging/logging
   /// - Parameter body: Function that is executed when this action is dispatched.
   ///
-  public init(body: @escaping Body) {
+  public init(description: String? = nil, body: @escaping Body) {
+    debugDescription = description
     self.body = body
   }
 
@@ -94,5 +96,12 @@ public final class RetainedPublisherAction<State>: Action {
 
   // MARK: Private
 
+  private let debugDescription: String?
   private let body: Body
+}
+
+extension RetainedPublisherAction: CustomStringConvertible {
+  public var description: String {
+    "[RetainedPublisherAction<\(type(of: State.self))>] \(debugDescription ?? "")"
+  }
 }

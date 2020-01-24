@@ -21,6 +21,7 @@ public struct PublisherDispatcherAction<State>: Action {
   /// Create an action with a payload that performs a state transformation
   /// - Parameter event: The type of update being performed. You can use this for
   ///   observing the state change, it is ignored by `publisherDispatcherReducer`.
+  /// - Parameter description: Description of this action for debugging/logging
   /// - Parameter update: Closure that performs an update. Invoked in the reducer.
   public init(_ event: Event, description: String?, _ update: @escaping (inout State) -> Void) {
     self.event = event
