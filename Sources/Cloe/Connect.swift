@@ -1,5 +1,6 @@
 // Created by Gil Birman on 1/11/20.
 
+import Combine
 import SwiftUI
 
 /// Inject a Cloe Store into a SwiftUI view
@@ -50,17 +51,32 @@ public struct Connect<State, SubState: Equatable, Content: View>: View {
     self.store = store
     self.selector = selector
     self.content = content
+    self.publisher = store.uniqueSubStatePublisher(selector)
   }
 
   public var body: some View {
     Group {
       (state ?? selector(store.state)).map(content)
-    }.onReceive(store.uniqueSubStatePublisher(selector)) { state in
+    }.onReceive(publisher) { state in
+      print(">>>xxx ", ObjectIdentifier(self.foo))
       self.state = state
     }
   }
 
+  public typealias Effect = (AnyPublisher<SubState, Never>, inout Set<AnyCancellable>) -> Void
+
+  public func effect(_ closure: Effect) -> Self {
+    var copy = self
+    closure(publisher, &copy.cancellables)
+    return copy
+  }
+
   // MARK: Private
 
+  private class Foo {}
+
   @SwiftUI.State private var state: SubState?
+  @SwiftUI.State private var foo = Foo()
+  private let publisher: AnyPublisher<SubState, Never>
+  private var cancellables = Set<AnyCancellable>()
 }

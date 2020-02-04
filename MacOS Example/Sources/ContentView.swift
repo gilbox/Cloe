@@ -4,6 +4,34 @@ import Cloe
 import Combine
 import SwiftUI
 
+struct Effect: ViewModifier {
+
+  func body(content: Content) -> some View {
+    content
+      .padding()
+      .background(Color.red)
+      .foregroundColor(Color.white)
+      .font(.largeTitle)
+  }
+}
+
+//struct Effect {
+//  init(_ keyPath: KeyPath<State, SubState>, _ effect: (SubState) -> Void) {
+//
+//  }
+//}
+
+//typealias EffectClosure = (AnyPublisher) -> Void
+//
+//func connect(
+//  store: Store<State>,
+//  selector: @escaping StateSelector<State, SubState>,
+//  content: @escaping (SubState) -> Content,
+//  effects: Effect...) -> some View
+//{
+//  Connect(store: store, selector: selector, content: content)
+//}
+
 struct ContentView: View {
   @State var index = 0
 
@@ -25,6 +53,16 @@ struct ContentView: View {
   }
 
   @EnvironmentObject private var store: AppStore
+
+  private func selectFile() {
+    let panel = NSOpenPanel()
+    DispatchQueue.main.async {
+      let result = panel.runModal()
+      guard result == .OK, let url = panel.url else { return }
+      self.player = AVPlayer(url: url)
+      self.url = url
+    }
+  }
 }
 
 struct MyChild: View {
@@ -35,18 +73,6 @@ struct MyChild: View {
 
   var body: some View {
     Connect(store: store, selector: selector, content: body)
-      .effect { publisher, cancellables in
-        print(">>>create new publisher")
-        publisher
-//          .removeDuplicates(\.name)
-//          .print(">>>--->")
-          .dropFirst()
-          .handleEvents(receiveCancel: { print(">>>cancel!") })
-          .sink { value in
-            print(">>>effect sink", value)
-          }
-          .store(in: &cancellables)
-      }
   }
 
   // MARK: Private

@@ -94,6 +94,18 @@ public class Store<State>: ObservableObject {
       .eraseToAnyPublisher()
   }
 
+  public func uniqueSubStatePublisher<SubState: Equatable, KeyedState: Equatable>(
+    _ selector: @escaping StateSelector<State, SubState>,
+    _ keyPath: KeyPath<SubState, KeyedState>)
+    -> AnyPublisher<KeyedState, Never>
+  {
+    return _statePublisher
+      .map(selector)
+      .map(keyPath)
+      .removeDuplicates()
+      .eraseToAnyPublisher()
+  }
+
   /// Returns a publisher for the given derived state selector.
   /// Does not remove repeated states.
   /// - Parameter selector: A function that returns a derived state
