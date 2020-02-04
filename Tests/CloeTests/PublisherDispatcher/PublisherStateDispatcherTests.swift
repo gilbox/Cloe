@@ -6,7 +6,15 @@ import XCTest
 
 final class PublisherStateDispatcherTests: XCTestCase {
   struct AppState {
+<<<<<<< Updated upstream
     var foo: PublisherState<Int, Never> = .initial
+=======
+    var foo: PublisherState<Int> = .initial
+
+    func copy() -> AppState {
+      AppState(foo: foo.copy())
+    }
+>>>>>>> Stashed changes
   }
 
   func testCompletingPublisher() {
@@ -15,7 +23,7 @@ final class PublisherStateDispatcherTests: XCTestCase {
     let dispatch: (Action) -> Void = { action in
       guard let action = action as? PublisherDispatcherAction<AppState> else { return }
       action.update(&state)
-      states.append(state)
+      states.append(state.copy())
     }
 
     let publisher = PassthroughSubject<Int, Never>()
@@ -30,27 +38,17 @@ final class PublisherStateDispatcherTests: XCTestCase {
     publisher.send(420)
     publisher.send(completion: .finished)
 
-    if case .loading = states[0].foo {} else {
-      XCTFail("Expected .loading state")
-    }
+    XCTAssertEqual(states[0].foo.status, .loading)
+    XCTAssertEqual(states[0].foo.output, nil)
 
-    if case .loadingWithOutput(let value) = states[1].foo {
-      XCTAssertEqual(value, 8)
-    } else {
-      XCTFail(".loadingWithOutput != \(states[1])")
-    }
+    XCTAssertEqual(states[1].foo.status, .loading)
+    XCTAssertEqual(states[1].foo.output, 8)
 
-    if case .loadingWithOutput(let value) = states[2].foo {
-      XCTAssertEqual(value, 420)
-    } else {
-      XCTFail(".loadingWithOutput  != \(states[2])")
-    }
+    XCTAssertEqual(states[2].foo.status, .loading)
+    XCTAssertEqual(states[2].foo.output, 420)
 
-    if case .completedWithOutput(let value) = states[3].foo {
-      XCTAssertEqual(value, 420)
-    } else {
-      XCTFail("Expect .completed state")
-    }
+    XCTAssertEqual(states[3].foo.status, .completed)
+    XCTAssertEqual(states[3].foo.output, 420)
 
     XCTAssertEqual(states.count, 4)
   }
@@ -61,7 +59,7 @@ final class PublisherStateDispatcherTests: XCTestCase {
     let dispatch: (Action) -> Void = { action in
       guard let action = action as? PublisherDispatcherAction<AppState> else { return }
       action.update(&state)
-      states.append(state)
+      states.append(state.copy())
     }
 
     let publisher = PassthroughSubject<Int, Never>()
@@ -74,13 +72,10 @@ final class PublisherStateDispatcherTests: XCTestCase {
 
     publisher.send(completion: .finished)
 
-    if case .loading = states[0].foo {} else {
-      XCTFail("Expected .loading state")
-    }
+    XCTAssertEqual(states[0].foo.status, .loading)
 
-    if case .completed = states[1].foo {} else {
-      XCTFail("Expect .completed state")
-    }
+    XCTAssertEqual(states[1].foo.status, .completed)
+    XCTAssertEqual(states[1].foo.output, nil)
 
     XCTAssertEqual(states.count, 2)
   }
@@ -95,9 +90,13 @@ final class PublisherStateDispatcherTests: XCTestCase {
     let dispatch: (Action) -> Void = { action in
       guard let action = action as? PublisherDispatcherAction<AppState> else { return }
       action.update(&state)
-      states.append(state)
+      states.append(state.copy())
     }
 
+<<<<<<< Updated upstream
+=======
+    enum MyError: Error, Equatable { case oops }
+>>>>>>> Stashed changes
     let publisher = PassthroughSubject<Int, MyError>()
     var cancellables = Set<AnyCancellable>()
 
@@ -110,25 +109,16 @@ final class PublisherStateDispatcherTests: XCTestCase {
     publisher.send(420)
     publisher.send(completion: .failure(.oops))
 
-    if case .loading = states[0].foo {} else {
-      XCTFail("Expected .loading state")
-    }
+    XCTAssertEqual(states[0].foo.status, .loading)
 
-    if case .loadingWithOutput(let value) = states[1].foo {
-      XCTAssertEqual(value, 8)
-    } else {
-      XCTFail(".loadingWithOutput != \(states[1])")
-    }
+    XCTAssertEqual(states[1].foo.status, .loading)
+    XCTAssertEqual(states[1].foo.output, 8)
 
-    if case .loadingWithOutput(let value) = states[2].foo {
-      XCTAssertEqual(value, 420)
-    } else {
-      XCTFail(".loadingWithOutput  != \(states[2])")
-    }
+    XCTAssertEqual(states[2].foo.status, .loading)
+    XCTAssertEqual(states[2].foo.output, 420)
 
-    if case .failed(_) = states[3].foo {} else {
-      XCTFail("Expect .failed state")
-    }
+    XCTAssertEqual(states[3].foo.status, .failed)
+    XCTAssertEqual(states[3].foo.error as? MyError, MyError.oops)
 
     XCTAssertEqual(states.count, 4)
   }
@@ -139,7 +129,7 @@ final class PublisherStateDispatcherTests: XCTestCase {
     let dispatch: (Action) -> Void = { action in
       guard let action = action as? PublisherDispatcherAction<AppState> else { return }
       action.update(&state)
-      states.append(state)
+      states.append(state.copy())
     }
 
     let publisher = PassthroughSubject<Int, Never>()
@@ -154,25 +144,17 @@ final class PublisherStateDispatcherTests: XCTestCase {
     publisher.send(420)
     cancellables.removeAll()
 
-    if case .loading = states[0].foo {} else {
-      XCTFail("Expected .loading state")
-    }
+    XCTAssertEqual(states[0].foo.status, .loading)
+    XCTAssertEqual(states[0].foo.output, nil)
 
-    if case .loadingWithOutput(let value) = states[1].foo {
-      XCTAssertEqual(value, 8)
-    } else {
-      XCTFail(".loadingWithOutput != \(states[1])")
-    }
+    XCTAssertEqual(states[1].foo.status, .loading)
+    XCTAssertEqual(states[1].foo.output, 8)
 
-    if case .loadingWithOutput(let value) = states[2].foo {
-      XCTAssertEqual(value, 420)
-    } else {
-      XCTFail(".loadingWithOutput  != \(states[2])")
-    }
+    XCTAssertEqual(states[2].foo.status, .loading)
+    XCTAssertEqual(states[2].foo.output, 420)
 
-    if case .cancelled = states[3].foo {} else {
-      XCTFail("Expect .cancelled state")
-    }
+    XCTAssertEqual(states[3].foo.status, .cancelled)
+    XCTAssertEqual(states[3].foo.output, 420)
 
     XCTAssertEqual(states.count, 4)
   }
